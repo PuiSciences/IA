@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dilution — PuiSciences</title>
+
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<style>
+:root{
+  --ps-bleu:#4da3ff;
+  --ps-bleu-dark:#1d5fa7;
+  --ps-bleu-pale:#eaf4ff;
+  --ps-vert:#6fa882;
+  --ps-vert-dark:#3e6e50;
+  --ps-rose:#ff6b8a;
+  --ps-fond:#f8f8f5;
+  --ps-noir:#222;
+  --ps-gris-dark:#555;
+  --ps-gris-pale:#f0f0ec;
+  --radius:16px;
+  --radius-sm:10px;
+  --font:'Segoe UI',sans-serif;
+}
+
+body{
+  margin:0;
+  background:var(--ps-fond);
+  font-family:var(--font);
+  color:var(--ps-noir);
+}
+
+header{
+  padding:2rem;
+  text-align:center;
+}
+
+h1{
+  font-size:2.8rem;
+  margin-bottom:0.5rem;
+}
+
+.tagline{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:0.5rem;
+}
+
+.tagline-pill{
+  padding:0.4rem 0.8rem;
+  border-radius:999px;
+  font-weight:600;
+  font-size:0.9rem;
+}
+
+.tp-b{background:var(--ps-bleu-pale); color:var(--ps-bleu-dark);}
+.tp-v{background:#e8f5ec; color:var(--ps-vert-dark);}
+.tp-r{background:#ffe8ee; color:#b43b5b;}
+.tp-g{background:#ededed; color:#555;}
+
+.container{
+  width:min(1100px,95%);
+  margin:auto;
+}
+
+.card{
+  background:white;
+  border-radius:var(--radius);
+  padding:1.5rem;
+  margin-bottom:1.5rem;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.card-title{
+  font-size:1.3rem;
+  font-weight:700;
+  margin-bottom:1rem;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+}
+
+.callout{
+  padding:1rem;
+  border-radius:12px;
+  margin-top:1rem;
+}
+
+.callout-v{background:#e8f5ec;}
+.callout-b{background:#eaf4ff;}
+.callout-r{background:#ffe8ee;}
+.callout-gris{background:#efefef;}
+
+.btn-launch{
+  background:var(--ps-bleu);
+  color:white;
+  border:none;
+  padding:0.8rem 1.2rem;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.btn-launch:hover{
+  transform:translateY(-2px);
+}
+
+.formula-box{
+  background:var(--ps-gris-pale);
+  padding:1rem;
+  border-radius:12px;
+}
+
+.label{
+  font-weight:700;
+  margin-right:0.5rem;
+}
+
+.question-card{
+  border-left:5px solid var(--ps-bleu);
+  padding:1rem;
+  background:#fff;
+  border-radius:12px;
+  margin-bottom:1rem;
+}
+
+.question-btn{
+  margin-top:1rem;
+  background:var(--ps-bleu-dark);
+  color:white;
+  border:none;
+  padding:0.5rem 1rem;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.answer{
+  display:none;
+  margin-top:1rem;
+  background:#f3f8ff;
+  padding:1rem;
+  border-radius:10px;
+}
+
+input{
+  width:100%;
+  padding:0.7rem;
+  border-radius:10px;
+  border:1px solid #ccc;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Simulation : Dilution</h1>
+
+  <div class="tagline">
+    <span class="tagline-pill tp-b">Dilution</span>
+    <span class="tagline-pill tp-v">Facteur de dilution</span>
+    <span class="tagline-pill tp-r">Solution mère</span>
+    <span class="tagline-pill tp-g">Fiole jaugée</span>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- QUESTIONS -->
+<div class="card">
+  <div class="card-title">
+    <i class="ti ti-help"></i>
+    Questions de cours — Seconde
+  </div>
+
+  <div id="questions-container"></div>
+</div>
+
+<!-- ANIMATION DILUTION -->
+<div class="card">
+  <div class="card-title">
+    <i class="ti ti-droplet"></i>
+    Animation : Dilution d'une solution
+  </div>
+
+  <div style="display:flex; gap:1rem; margin-bottom:1rem; align-items:center;">
+    <div style="flex:1;">
+      <label>Volume initial (mL)</label>
+      <input id="volInitial" type="number" value="10">
+    </div>
+
+    <div style="flex:1;">
+      <label>Volume final (mL)</label>
+      <input id="volFinal" type="number" value="100">
+    </div>
+
+    <button class="btn-launch" onclick="startDilutionDemo()">
+      <i class="ti ti-player-play"></i>
+      Lancer
+    </button>
+  </div>
+
+  <div class="formula-box">
+    <span class="label">Facteur de dilution :</span>
+    <span id="facteurDilution">10</span>
+  </div>
+
+  <div id="dilutionContainer" style="
+    height:300px;
+    margin-top:1rem;
+    position:relative;
+    overflow:hidden;
+    border-radius:16px;
+    background:linear-gradient(to bottom,var(--ps-bleu-pale),white);
+    border:2px solid #ddd;
+  ">
+
+    <div id="solvant" style="
+      position:absolute;
+      bottom:0;
+      left:0;
+      right:0;
+      height:0%;
+      background:rgba(135,206,235,0.35);
+      transition:height 2s;
+    "></div>
+
+    <div id="molecules"></div>
+
+    <div style="
+      position:absolute;
+      bottom:20px;
+      left:50%;
+      transform:translateX(-50%);
+      width:120px;
+      height:220px;
+      border:3px solid #444;
+      border-radius:0 0 30px 30px;
+    "></div>
+
+  </div>
+</div>
+
+<!-- ENTRAINEMENT -->
+<div class="card">
+  <div class="card-title">
+    <i class="ti ti-flask"></i>
+    Entraînement : Trouve le bon matériel
+  </div>
+
+  <div class="callout callout-b">
+    Objectif : Obtenir un facteur de dilution de <span id="targetFactor">10</span>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+
+    <div>
+      <h3>Pipettes</h3>
+      <div id="pipetteOptions" style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <button class="btn-launch" onclick="selectPipette(1)">1 mL</button>
+        <button class="btn-launch" onclick="selectPipette(2)">2 mL</button>
+        <button class="btn-launch" onclick="selectPipette(5)">5 mL</button>
+        <button class="btn-launch" onclick="selectPipette(10)">10 mL</button>
+      </div>
+    </div>
+
+    <div>
+      <h3>Fioles</h3>
+      <div id="flaskOptions" style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <button class="btn-launch" onclick="selectFlask(50)">50 mL</button>
+        <button class="btn-launch" onclick="selectFlask(100)">100 mL</button>
+        <button class="btn-launch" onclick="selectFlask(200)">200 mL</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="formula-box" style="margin-top:1rem;">
+    Pipette : <span id="selectedPipette">?</span> mL |
+    Fiole : <span id="selectedFlask">?</span> mL |
+    Facteur : <span id="calculatedFactor">?</span>
+  </div>
+
+  <button class="btn-launch" style="margin-top:1rem;" onclick="checkDilution()">
+    Vérifier
+  </button>
+
+  <div id="dilutionFeedback"></div>
+</div>
+
+</div>
+
+<script>
+
+const questions = [
+  {
+    text:'Qu’est-ce qu’une dilution ?',
+    answer:'Une dilution consiste à obtenir une solution moins concentrée en ajoutant du solvant.'
+  },
+  {
+    text:'Comment s’appelle la solution avant dilution ?',
+    answer:'La solution avant dilution s’appelle la solution mère.'
+  },
+  {
+    text:'Comment s’appelle la solution obtenue après dilution ?',
+    answer:'La solution obtenue est appelée solution fille.'
+  },
+  {
+    text:'Quel matériel utilise-t-on pour prélever un volume précis ?',
+    answer:'On utilise une pipette jaugée.'
+  },
+  {
+    text:'Quel matériel permet d’obtenir le volume final exact ?',
+    answer:'On utilise une fiole jaugée.'
+  },
+  {
+    text:'Que signifie un facteur de dilution F = 10 ?',
+    answer:'La solution fille est 10 fois moins concentrée que la solution mère.'
+  },
+  {
+    text:'Pourquoi faut-il compléter avec de l’eau distillée ?',
+    answer:'Cela permet d’obtenir exactement le volume final voulu.'
+  }
+];
+
+function buildQuestions(){
+
+  const container = document.getElementById('questions-container');
+
+  questions.forEach((q,index)=>{
+
+    const div = document.createElement('div');
+    div.className='question-card';
+
+    div.innerHTML = `
+      <strong>Question ${index+1}</strong><br><br>
+      ${q.text}
+
+      <button class="question-btn" onclick="toggleAnswer(${index})">
+        Correction
+      </button>
+
+      <div class="answer" id="answer-${index}">
+        ${q.answer}
+      </div>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+function toggleAnswer(id){
+  const el = document.getElementById('answer-'+id);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+buildQuestions();
+
+function startDilutionDemo(){
+
+  const initialVol = parseInt(document.getElementById('volInitial').value);
+  const finalVol = parseInt(document.getElementById('volFinal').value);
+
+  const factor = (finalVol/initialVol).toFixed(1);
+
+  document.getElementById('facteurDilution').textContent = factor;
+
+  const moleculesDiv = document.getElementById('molecules');
+  moleculesDiv.innerHTML='';
+
+  const solvant = document.getElementById('solvant');
+  solvant.style.height = (finalVol/200*100)+'%';
+
+  for(let i=0;i<30;i++){
+
+    const mol = document.createElement('div');
+
+    mol.style.cssText=`
+      position:absolute;
+      width:8px;
+      height:8px;
+      background:#ff6b8a;
+      border-radius:50%;
+      left:${Math.random()*80+10}%;
+      bottom:${Math.random()*40+10}%;
+      transition:all 2s;
+    `;
+
+    moleculesDiv.appendChild(mol);
+
+    setTimeout(()=>{
+      mol.style.bottom = (Math.random()*70+10)+'%';
+      mol.style.opacity='0.7';
+    },100);
+  }
+}
+
+let selectedPipetteVol = null;
+let selectedFlaskVol = null;
+let targetFactor = 10;
+
+function selectPipette(vol){
+  selectedPipetteVol = vol;
+  document.getElementById('selectedPipette').textContent = vol;
+  updateFactor();
+}
+
+function selectFlask(vol){
+  selectedFlaskVol = vol;
+  document.getElementById('selectedFlask').textContent = vol;
+  updateFactor();
+}
+
+function updateFactor(){
+
+  if(selectedPipetteVol && selectedFlaskVol){
+
+    const factor = selectedFlaskVol / selectedPipetteVol;
+
+    document.getElementById('calculatedFactor').textContent = factor;
+  }
+}
+
+function checkDilution(){
+
+  if(!selectedPipetteVol || !selectedFlaskVol){
+
+    document.getElementById('dilutionFeedback').innerHTML = `
+      <div class="callout callout-r">
+        Sélectionne une pipette et une fiole.
+      </div>
+    `;
+
+    return;
+  }
+
+  const factor = selectedFlaskVol / selectedPipetteVol;
+
+  if(factor === targetFactor){
+
+    document.getElementById('dilutionFeedback').innerHTML = `
+      <div class="callout callout-v">
+        Bravo ! Tu as trouvé la bonne combinaison.
+      </div>
+    `;
+
+  } else {
+
+    document.getElementById('dilutionFeedback').innerHTML = `
+      <div class="callout callout-r">
+        Mauvais facteur de dilution : ${factor}
+      </div>
+    `;
+  }
+}
+
+</script>
+
+</body>
+</html>
+

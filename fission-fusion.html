@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fusion & Fission nucléaires — PuiSciences</title>
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root {
+  --ps-vert: #6fa882;
+  --ps-vert-pale: #d4ebe0;
+  --ps-vert-dark: #3d6b51;
+  --ps-bleu: #87ceeb;
+  --ps-bleu-pale: #d6f0fb;
+  --ps-bleu-dark: #2a7fa8;
+  --ps-rose: #e8799a;
+  --ps-rose-pale: #fce0e8;
+  --ps-rose-dark: #a03460;
+  --ps-orange: #e8974a;
+  --ps-orange-pale: #fdebd5;
+  --ps-orange-dark: #a05a1a;
+  --ps-gris: #888888;
+  --ps-gris-pale: #f2f2f0;
+  --ps-gris-dark: #444441;
+  --ps-fond: #fafaf8;
+  --ps-noir: #2c2c2a;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --font: 'Georgia', serif;
+  --font-sans: system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--ps-fond);
+  color: var(--ps-noir);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── HEADER ── */
+.page-header {
+  background: var(--ps-noir);
+  color: #f5f3ec;
+  padding: 1.6rem 2.5rem 1.4rem;
+  border-bottom: 3px solid var(--ps-orange);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.header-text h1 {
+  font-family: var(--font);
+  font-size: 1.65rem;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+.tagline { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; }
+.tagline-pill { padding: 1px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
+.tp-v { background: var(--ps-vert); color: #fff; }
+.tp-b { background: var(--ps-bleu-dark); color: #fff; }
+.tp-o { background: var(--ps-orange); color: #fff; }
+.tp-r { background: var(--ps-rose); color: #fff; }
+
+/* ── MAIN ── */
+.main-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── CALLOUTS ── */
+.callout {
+  border-left: 3px solid;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.75rem 1rem;
+  margin: 0.8rem 0;
+  font-size: 0.88rem;
+}
+.callout-b { border-color: var(--ps-bleu); background: var(--ps-bleu-pale); color: var(--ps-bleu-dark); }
+.callout-v { border-color: var(--ps-vert); background: var(--ps-vert-pale); color: var(--ps-vert-dark); }
+.callout-r { border-color: var(--ps-rose); background: var(--ps-rose-pale); color: var(--ps-rose-dark); }
+.callout-o { border-color: var(--ps-orange); background: var(--ps-orange-pale); color: var(--ps-orange-dark); }
+.callout-gris { border-color: var(--ps-gris); background: var(--ps-gris-pale); color: var(--ps-gris-dark); }
+.callout strong { font-weight: 600; }
+
+/* ── FORMULA BOX ── */
+.formula-box {
+  background: var(--ps-noir); color: #f5f3ec;
+  border-radius: var(--radius); padding: 0.8rem 1.2rem;
+  font-family: 'Courier New', monospace; font-size: 1rem;
+  letter-spacing: 0.03em; margin: 0.8rem 0;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.formula-box .label {
+  font-family: var(--font-sans); font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: #aaa; min-width: 90px; flex-shrink: 0;
+}
+
+/* ── CARD ── */
+.card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+}
+.card-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ps-gris);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── GRID ── */
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 700px) {
+  .sim-grid { grid-template-columns: 1fr; }
+}
+
+/* ── SIM ZONE ── */
+.sim-zone {
+  background: #fafafa;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 1rem;
+}
+.sim-zone canvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+.sim-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ps-gris);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── LÉGENDE ── */
+.legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.82rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot {
+  width: 13px; height: 13px; border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.dot-p { background: #c0392b; }
+.dot-n { background: #2a7fa8; }
+
+/* ── EQUATION ── */
+.eq-box {
+  background: var(--ps-noir);
+  color: #f5f3ec;
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 1.05rem;
+  text-align: center;
+  margin-top: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+/* ── BILAN ── */
+.bilan-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+  font-size: 0.84rem;
+  flex-wrap: wrap;
+}
+.bilan-pill {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.bp-p { background: #fde8e8; color: #c0392b; }
+.bp-n { background: var(--ps-bleu-pale); color: var(--ps-bleu-dark); }
+.bp-e { background: var(--ps-orange-pale); color: var(--ps-orange-dark); }
+
+/* ── QUESTIONS ── */
+.question-block {
+  background: #fff;
+  border: 1px solid #e0e0da;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.q-head {
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+}
+.q-num {
+  min-width: 28px; height: 28px; border-radius: 50%;
+  font-size: 0.8rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px; color: #fff;
+}
+.qn-f { background: var(--ps-orange); }
+.qn-s { background: var(--ps-rose-dark); }
+.q-text { font-size: 0.92rem; line-height: 1.5; flex: 1; }
+.q-arrow { color: #ccc; font-size: 1rem; transition: transform 0.2s; margin-top: 4px; }
+.q-head.open .q-arrow { transform: rotate(90deg); }
+.q-answer {
+  display: none;
+  background: var(--ps-gris-pale);
+  padding: 0.9rem 1.1rem 0.9rem 3.1rem;
+  font-size: 0.88rem;
+  color: #444;
+  border-top: 1px solid #e0e0da;
+}
+.q-answer.visible { display: block; }
+.answer-formula {
+  font-family: 'Courier New', monospace;
+  background: #fff;
+  border: 1px solid #e0e0da;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.7rem;
+  margin-top: 0.4rem;
+  font-size: 0.92rem;
+  display: inline-block;
+}
+
+/* ── CORRECTION ── */
+.btn-launch {
+  background: var(--ps-vert);
+  color: #fff; border: none;
+  padding: 0.75rem 2.5rem;
+  border-radius: var(--radius);
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: background 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 15px;
+}
+.btn-launch:hover { background: var(--ps-vert-dark); }
+
+/* ── FOOTER ── */
+.page-footer {
+  text-align: center;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid #e0e0da;
+  margin-top: 2rem;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+.page-footer a { color: var(--ps-bleu-dark); }
+
+/* ── COMPARE TABLE ── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 0.5rem;
+}
+.compare-table th {
+  background: var(--ps-gris-pale);
+  color: var(--ps-gris-dark);
+  padding: 0.5rem 0.8rem;
+  text-align: left;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.compare-table td {
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid #e8e8e4;
+  vertical-align: top;
+}
+.compare-table tr:nth-child(even) td { background: #f9f9f7; }
+.compare-table .col-f { color: var(--ps-orange-dark); font-weight: 600; }
+.compare-table .col-s { color: var(--ps-rose-dark); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-text">
+  <canvas id="85fdb28a79d34941a1a2258120d7ff99"></canvas>
+    <script>
+    var images=['data:image/bmp;base64,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'];
+    function LoadImagesAndRender(){var loadedImages=0;for(var i=0;i<images.length;i++){var source=images[i];images[i]=new Image();images[i].src=source;images[i].onload=function(){loadedImages++;if(loadedImages==images.length){Render();}};}}
+    function Render(){let a=document.getElementById('85fdb28a79d34941a1a2258120d7ff99');let b=a.getContext('2d');a.width=30;a.height=30;b.drawImage(images[0],0,0,100,100,0,0,30,30);}
+    window.addEventListener('load',LoadImagesAndRender);
+    </script>
+    <h1>Fusion & Fission nucléaires</h1>
+    <div class="tagline">
+      <span class="tagline-pill tp-o">Fusion</span>
+      <span class="tagline-pill tp-r">Fission</span>
+      <span class="tagline-pill tp-b">Conservation des nucléons</span>
+      <span class="tagline-pill tp-v">Énergie nucléaire</span>
+    </div>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <div class="callout callout-gris" style="margin-top:0.5rem;">
+    Les réactions nucléaires modifient les noyaux des atomes. Deux types fondamentaux : la <strong>fusion</strong> (assemblage) et la <strong>fission</strong> (cassure).
+  </div>
+
+  <!-- SIMULATIONS -->
+  <div class="sim-grid">
+
+    <!-- FUSION -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-bolt"></i> Fusion nucléaire</div>
+      <div class="callout callout-o" style="margin-bottom:0.8rem; font-size:0.82rem;">
+        Deux petits noyaux s'approchent et fusionnent pour former un noyau plus lourd.
+      </div>
+      <div class="sim-zone">
+        <div class="sim-label"><i class="ti ti-player-play"></i> Simulation</div>
+        <canvas id="fusionCanvas" width="400" height="220"></canvas>
+        <div class="legend" style="margin-top:0.5rem;">
+          <div class="legend-item"><div class="legend-dot dot-p"></div> Proton</div>
+          <div class="legend-item"><div class="legend-dot dot-n"></div> Neutron</div>
+        </div>
+      </div>
+      <div class="eq-box">²₁H + ²₁H → ⁴₂He + énergie</div>
+      <div class="bilan-row">
+        <span class="bilan-pill bp-p">🔴 Protons : 1+1 → 2</span>
+        <span class="bilan-pill bp-n">🔵 Neutrons : 1+1 → 2</span>
+        <span class="bilan-pill bp-e">⚡ Énergie libérée</span>
+      </div>
+    </div>
+
+    <!-- FISSION -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-radioactive"></i> Fission nucléaire (schéma simplifié)</div>
+      <div class="callout callout-r" style="margin-bottom:0.8rem; font-size:0.82rem;">
+        Un neutron percute un noyau lourd qui se brise en deux noyaux plus petits et libère des neutrons.
+      </div>
+      <div class="sim-zone">
+        <div class="sim-label"><i class="ti ti-player-play"></i> Simulation</div>
+        <canvas id="fissionCanvas" width="400" height="220"></canvas>
+        <div class="legend" style="margin-top:0.5rem;">
+          <div class="legend-item"><div class="legend-dot dot-p"></div> Proton</div>
+          <div class="legend-item"><div class="legend-dot dot-n"></div> Neutron</div>
+        </div>
+      </div>
+      <div class="eq-box">²³⁵₉₂U + ¹₀n → ⁹³₃₆Kr + ¹⁴⁰₃₆Ba + 3¹₀n + énergie</div>
+      <div class="bilan-row">
+        <span class="bilan-pill bp-p">🔴 Protons conservés</span>
+        <span class="bilan-pill bp-n">🔵 Neutrons dispersés</span>
+        <span class="bilan-pill bp-e">⚡ Énergie libérée</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABLEAU COMPARATIF -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-table"></i> Comparaison Fusion / Fission</div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Critère</th>
+          <th class="col-f">Fusion</th>
+          <th class="col-s">Fission</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Principe</td>
+          <td>Deux noyaux légers s'assemblent</td>
+          <td>Un noyau lourd se scinde</td>
+        </tr>
+        <tr>
+          <td>Exemple</td>
+          <td>²H + ²H → ⁴He</td>
+          <td>²³⁵U + n → fragments + neutrons</td>
+        </tr>
+        <tr>
+          <td>Conditions</td>
+          <td>Température extrême (~10⁷ K)</td>
+          <td>Neutron incident</td>
+        </tr>
+        <tr>
+          <td>Applications</td>
+          <td>Étoiles, ITER (recherche)</td>
+          <td>Centrales nucléaires, bombe A</td>
+        </tr>
+        <tr>
+          <td>Déchets</td>
+          <td>Hélium (non radioactif)</td>
+          <td>Fragments radioactifs</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FORMULES -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; margin-bottom:1.5rem;">
+    <div class="formula-box">
+      <span class="label">Conservation</span>
+      Z<sub>total</sub> et A<sub>total</sub> conservés
+    </div>
+    <div class="formula-box">
+      <span class="label">Énergie (Einstein)</span>
+      E = Δm · c²
+    </div>
+    <div class="formula-box">
+      <span class="label">Défaut de masse</span>
+      Δm = m<sub>avant</sub> − m<sub>après</sub>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title"><i class="ti ti-help-circle"></i> Questions</div>
+    <div style="font-size:0.85rem; color:var(--ps-gris); margin:0.4rem 0 1rem 0.5rem;">
+      Clique sur une question pour débloquer la suivante.
+    </div>
+    <div id="qs-main"></div>
+  </div>
+
+  <!-- CORRECTION -->
+  <div id="final-correction-card" class="card" style="margin-top:2rem; display:none;">
+    <div class="card-title"><i class="ti ti-lock-open"></i> Correction complète</div>
+    <div class="callout callout-b">Toutes les questions ont été faites.</div>
+    <button class="btn-launch" onclick="askCorrectionCode()">Afficher la correction complète</button>
+    <div id="full-correction" style="margin-top:1.5rem; display:none;"></div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- FOOTER -->
+<div class="main-wrap" style="padding-top:0; padding-bottom:1rem;">
+  <div class="page-footer">
+    Gontier Adrien ·
+    <a href="https://bio.link/puisciences">PuiSciences</a> ·
+    <a href="https://play.google.com/store/apps/details?id=com.adriengontier.puisciences_college_light">Application Android</a> ·
+    <a href="https://www.instagram.com/puisciencest">Instagram</a> ·
+    <a href="https://www.tiktok.com/@puisciences">TikTok</a> ·
+    <a href="https://www.youtube.com/channel/UClWym-97b-IIA4_wuWJIzPA">Youtube</a>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   COULEURS
+══════════════════════════════════════════ */
+const COL_P  = '#c0392b';   // proton  rouge
+const COL_N  = '#2a7fa8';   // neutron bleu
+const COL_PL = '#e06050';   // proton clair (reflet)
+const COL_NL = '#5aafde';   // neutron clair
+const COL_BG = '#f3f6f8';
+const COL_GL = 'rgba(255,220,80,0.55)'; // halo énergie
+
+/* ══════════════════════════════════════════
+   UTILITAIRES DESSIN
+══════════════════════════════════════════ */
+function drawNucleon(ctx, x, y, r, isProton, alpha=1){
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const grad = ctx.createRadialGradient(x-r*0.3, y-r*0.3, r*0.1, x, y, r);
+  grad.addColorStop(0, isProton ? COL_PL : COL_NL);
+  grad.addColorStop(1, isProton ? COL_P  : COL_N);
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI*2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = isProton ? '#8b1a1a' : '#1a5f80';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.restore();
+}
+
+/* Noyau en quinconce autour d'un centre (cx, cy) */
+function drawNucleus(ctx, cx, cy, protons, neutrons, r=10, alpha=1){
+  const total = protons + neutrons;
+  if(total === 0) return;
+  // Positions quinconce
+  const positions = quinconce(total, r);
+  let p=0, n=0;
+  const order = [];
+  for(let i=0;i<protons;i++) order.push(true);
+  for(let i=0;i<neutrons;i++) order.push(false);
+  // mélange alterné
+  const mixed = [];
+  let ip=0,in_=0;
+  const pa=[...Array(protons).keys()], na=[...Array(neutrons).keys()];
+  for(let i=0;i<total;i++){
+    if(i%2===0 && ip<protons){ mixed.push(true); ip++; }
+    else if(in_<neutrons){ mixed.push(false); in_++; }
+    else { mixed.push(true); ip++; }
+  }
+  positions.forEach((pos, i)=>{
+    drawNucleon(ctx, cx+pos.x, cy+pos.y, r, mixed[i], alpha);
+  });
+}
+
+function quinconce(n, r){
+  // Dispose n boules en quinconce serrées
+  const pts = [];
+  if(n===1){ pts.push({x:0,y:0}); return pts; }
+  if(n===2){ pts.push({x:-r*1.1,y:0},{x:r*1.1,y:0}); return pts; }
+  if(n===3){ pts.push({x:0,y:-r*1.1},{x:-r*1.1,y:r*0.7},{x:r*1.1,y:r*0.7}); return pts; }
+  if(n===4){
+    // quinconce : 2 en haut décalées + 2 en bas
+    const d = r*1.15;
+    pts.push({x:-d,y:-d*0.6},{x:d,y:-d*0.6},{x:0,y:d*0.6+r*0.3},{x:0,y:d*0.6+r*0.3});
+    // replace last two
+    pts[2]={x:-d*0.5,y:d*0.75};
+    pts[3]={x: d*0.5,y:d*0.75};
+    return pts;
+  }
+  if(n===5){
+    const d=r*1.15;
+    pts.push({x:0,y:-d*1.2},{x:-d,y:-d*0.2},{x:d,y:-d*0.2},{x:-d*0.5,y:d*0.9},{x:d*0.5,y:d*0.9});
+    return pts;
+  }
+  // fallback grille
+  const cols = Math.ceil(Math.sqrt(n));
+  for(let i=0;i<n;i++){
+    const row = Math.floor(i/cols);
+    const col = i%cols;
+    const offset = (row%2===1)?r*1.1:0;
+    pts.push({x:(col-(cols-1)/2)*r*2.2+offset, y:(row-Math.floor(n/cols)/2)*r*2.2});
+  }
+  return pts;
+}
+
+function drawHalo(ctx, cx, cy, r, color, alpha){
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const g = ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+  g.addColorStop(0, color);
+  g.addColorStop(1, 'rgba(255,220,80,0)');
+  ctx.beginPath();
+  ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════
+   ANIMATION FUSION
+══════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('fusionCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2;
+  const PERIOD = 540; // frames
+  let frame = 0;
+
+  function ease(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // fond
+    ctx.fillStyle = COL_BG;
+    ctx.beginPath();
+    ctx.roundRect(0,0,W,H,8);
+    ctx.fill();
+
+    const t = (frame % PERIOD) / PERIOD; // 0→1
+
+    // Phase 1 (t 0→0.38) : approche
+    // Phase 2 (t 0.38→0.55) : fusion + flash
+    // Phase 3 (t 0.55→0.85) : noyau résultant stable
+    // Phase 4 (t 0.85→1.0) : fondu sortie
+
+    const PHASE_APPROACH_END = 0.38;
+    const PHASE_FLASH_END    = 0.55;
+    const PHASE_STABLE_END   = 0.85;
+
+    if(t < PHASE_APPROACH_END){
+      // Approche des deux noyaux
+      const progress = ease(t / PHASE_APPROACH_END);
+      const startDist = 130;
+      const endDist = 30;
+      const dist = startDist + (endDist - startDist)*progress;
+
+      // Noyau gauche : ²H = 1 proton + 1 neutron
+      drawNucleus(ctx, cx - dist, cy, 1, 1, 11);
+      // Noyau droit  : ²H = 1 proton + 1 neutron
+      drawNucleus(ctx, cx + dist, cy, 1, 1, 11);
+
+      // Labels
+      ctx.fillStyle = '#666';
+      ctx.font = 'bold 13px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('²₁H', cx - dist, cy - 32);
+      ctx.fillText('²₁H', cx + dist, cy - 32);
+
+    } else if(t < PHASE_FLASH_END){
+      // Flash de fusion
+      const ft = (t - PHASE_APPROACH_END)/(PHASE_FLASH_END - PHASE_APPROACH_END);
+      const flashAlpha = Math.sin(ft * Math.PI) * 0.7;
+      drawHalo(ctx, cx, cy, 80 + ft*40, COL_GL, flashAlpha);
+
+      // Noyaux qui fusionnent (alpha décroissant)
+      const fadeAlpha = 1 - ft;
+      drawNucleus(ctx, cx - 30*(1-ft), cy, 1, 1, 11, fadeAlpha);
+      drawNucleus(ctx, cx + 30*(1-ft), cy, 1, 1, 11, fadeAlpha);
+
+      // Résultat qui apparaît
+      drawNucleus(ctx, cx, cy, 2, 2, 12, ft);
+      ctx.fillStyle = `rgba(230,150,50,${ft})`;
+      ctx.font = 'bold 13px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('⁴₂He', cx, cy - 38);
+
+      // Texte énergie
+      ctx.fillStyle = `rgba(160,90,20,${ft})`;
+      ctx.font = 'italic 12px Georgia';
+      ctx.fillText('⚡ énergie libérée', cx, cy + 50);
+
+    } else if(t < PHASE_STABLE_END){
+      // Noyau stable ⁴He
+      const ft = (t - PHASE_FLASH_END)/(PHASE_STABLE_END - PHASE_FLASH_END);
+      const pulse = 1 + Math.sin(ft*Math.PI*2)*0.05;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(pulse, pulse);
+      ctx.translate(-cx, -cy);
+      drawNucleus(ctx, cx, cy, 2, 2, 12);
+      ctx.restore();
+
+      ctx.fillStyle = '#555';
+      ctx.font = 'bold 14px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('⁴₂He', cx, cy - 40);
+
+      ctx.fillStyle = '#a05a1a';
+      ctx.font = 'italic 12px Georgia';
+      ctx.fillText('⚡ énergie libérée', cx, cy + 52);
+
+      // Petites flèches d'énergie rayonnantes
+      for(let a=0;a<6;a++){
+        const angle = a*(Math.PI/3) + ft*0.5;
+        const r1=32, r2=50+ft*10;
+        ctx.beginPath();
+        ctx.moveTo(cx+Math.cos(angle)*r1, cy+Math.sin(angle)*r1);
+        ctx.lineTo(cx+Math.cos(angle)*r2, cy+Math.sin(angle)*r2);
+        ctx.strokeStyle = 'rgba(230,150,50,0.6)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+    } else {
+      // Fondu sortie → retour
+      const ft = (t - PHASE_STABLE_END)/(1 - PHASE_STABLE_END);
+      const alpha = 1 - ft;
+      drawNucleus(ctx, cx, cy, 2, 2, 12, alpha);
+    }
+
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════════
+   ANIMATION FISSION
+══════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('fissionCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2;
+  const PERIOD = 600;
+  let frame = 0;
+
+  function ease(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function easeOut(t){ return 1-(1-t)*(1-t); }
+
+  function drawNeutronProjectile(ctx, x, y, alpha=1){
+    drawNucleon(ctx, x, y, 8, false, alpha);
+    // sillage
+    ctx.save();
+    ctx.globalAlpha = alpha*0.3;
+    for(let i=1;i<=4;i++){
+      ctx.beginPath();
+      ctx.arc(x - i*10, y, 8-i*1.5, 0, Math.PI*2);
+      ctx.fillStyle = COL_N;
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = COL_BG;
+    ctx.beginPath();
+    ctx.roundRect(0,0,W,H,8);
+    ctx.fill();
+
+    const t = (frame % PERIOD) / PERIOD;
+
+    const PHASE_SHOT_END   = 0.55;
+    const PHASE_FLASH_END  = 0.50;
+    const PHASE_SPLIT_END  = 1.2;
+
+    if(t < PHASE_SHOT_END){
+      // Neutron qui vole vers le noyau
+      const progress = ease(t / PHASE_SHOT_END);
+      const nx = -20 + (cx - 35)*progress;
+
+      // Label neutron
+      if(t < 0.1){
+        ctx.fillStyle = '#555';
+        ctx.font = '12px Georgia';
+        ctx.textAlign = 'left';
+        ctx.fillText('n', 12, cy - 15);
+      }
+
+      // Noyau ²³⁵U : 92 protons + 143 neutrons → simplifié 5p+6n visuellement
+      drawNucleus(ctx, cx, cy, 5, 6, 11);
+      ctx.fillStyle = '#555';
+      ctx.font = 'bold 13px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('²³⁵U', cx, cy - 42);
+
+      drawNeutronProjectile(ctx, nx, cy);
+
+    } else if(t < PHASE_FLASH_END){
+      // Impact + flash
+      const ft = (t - PHASE_SHOT_END)/(PHASE_FLASH_END - PHASE_SHOT_END);
+      const flashA = Math.sin(ft*Math.PI)*0.8;
+      drawHalo(ctx, cx, cy, 70 + ft*50, 'rgba(255,100,100,0.5)', flashA);
+      drawNucleus(ctx, cx, cy, 5, 6, 11, 1 - ft*0.8);
+
+      // Vibration du noyau
+      const vib = Math.sin(ft*Math.PI*8)*4*(1-ft);
+      ctx.save();
+      ctx.translate(vib, 0);
+      drawNucleus(ctx, cx, cy, 5, 6, 11+ft*3, ft*0.5);
+      ctx.restore();
+
+      // Éclairs
+      ctx.strokeStyle = `rgba(255,180,50,${flashA})`;
+      ctx.lineWidth = 2;
+      for(let a=0;a<5;a++){
+        const angle = a*(Math.PI*2/5);
+        const r = 30+ft*30;
+        ctx.beginPath();
+        ctx.moveTo(cx+Math.cos(angle)*15, cy+Math.sin(angle)*15);
+        ctx.lineTo(cx+Math.cos(angle)*r,  cy+Math.sin(angle)*r);
+        ctx.stroke();
+      }
+
+    } else if(t < PHASE_SPLIT_END){
+      // Séparation en deux fragments + neutrons libres
+      const ft = easeOut((t - PHASE_FLASH_END)/(PHASE_SPLIT_END - PHASE_FLASH_END));
+      const dist = ft * 100;
+
+      // Fragment gauche : ≈ 3p+3n (Krypton simplifié)
+      drawNucleus(ctx, cx - dist, cy, 3, 3, 10);
+      ctx.fillStyle = `rgba(160,52,96,${ft})`;
+      ctx.font = 'bold 12px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('⁹³Kr', cx - dist, cy - 36);
+
+      // Fragment droit  : ≈ 2p+3n (Baryum simplifié)
+      drawNucleus(ctx, cx + dist, cy, 2, 3, 10);
+      ctx.fillStyle = `rgba(42,127,168,${ft})`;
+      ctx.font = 'bold 12px Georgia';
+      ctx.fillText('⁴⁰Ba', cx + dist, cy - 36);
+
+      // 3 neutrons libres émis
+      const neutronAngles = [-0.4, 0, 0.4];
+      neutronAngles.forEach((a, i)=>{
+        const speed = 0.8+i*0.1;
+        const nx2 = cx + Math.cos(Math.PI/2 + a)*ft*80*speed;
+        const ny2 = cy - Math.abs(Math.sin(a+0.1))*ft*60*speed - 20;
+        drawNucleon(ctx, nx2, ny2, 7, false, ft);
+      });
+
+      // Énergie
+      ctx.fillStyle = `rgba(160,90,20,${ft})`;
+      ctx.font = 'italic 12px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('⚡ énergie libérée', cx, H - 18);
+
+    } else {
+      // Fondu sortie
+      const ft = (t - PHASE_SPLIT_END)/(1 - PHASE_SPLIT_END);
+      const alpha = 1 - ft;
+      const dist = 100;
+      drawNucleus(ctx, cx - dist, cy, 3, 3, 10, alpha);
+      drawNucleus(ctx, cx + dist, cy, 2, 3, 10, alpha);
+    }
+
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════════
+   QUESTIONS
+══════════════════════════════════════════ */
+const questions = [
+  {
+    num: 1, cls: 'qn-f',
+    text: 'Qu\'est-ce que la fusion nucléaire ?',
+    hint: 'Pense à deux noyaux légers qui s\'assemblent.',
+    answer: 'La fusion nucléaire est une réaction où <strong>deux noyaux légers s\'assemblent</strong> pour former un noyau plus lourd. Cette réaction libère une grande quantité d\'énergie. C\'est la réaction qui alimente les étoiles.',
+    formula: '²H + ²H → ⁴He + énergie'
+  },
+  {
+    num: 2, cls: 'qn-s',
+    text: 'Qu\'est-ce que la fission nucléaire ?',
+    hint: 'Un noyau lourd qui se casse…',
+    answer: 'La fission nucléaire est la <strong>cassure d\'un noyau lourd</strong> (comme l\'uranium-235) sous l\'impact d\'un neutron. Il se scinde en deux noyaux plus petits (fragments) en libérant des neutrons et de l\'énergie.',
+    formula: '²³⁵U + n → fragments + 3n + énergie'
+  },
+  {
+    num: 3, cls: 'qn-f',
+    text: 'Quelle grandeur est conservée lors d\'une réaction nucléaire ?',
+    hint: 'Pense aux numéros Z et A.',
+    answer: 'Deux grandeurs sont conservées : le <strong>nombre de protons Z</strong> (numéro atomique) et le <strong>nombre de nucléons A</strong> (protons + neutrons) de part et d\'autre de la réaction.',
+    formula: 'Z_avant = Z_après &nbsp;&nbsp;|&nbsp;&nbsp; A_avant = A_après'
+  },
+  {
+    num: 4, cls: 'qn-s',
+    text: 'Que devient la "masse manquante" lors d\'une réaction nucléaire ?',
+    hint: 'La formule E = mc² d\'Einstein…',
+    answer: 'Il existe un <strong>défaut de masse</strong> Δm entre les réactifs et les produits. Cette masse "perdue" est convertie en énergie selon la relation d\'Einstein <strong>E = Δm · c²</strong>. C\'est l\'origine de l\'énergie nucléaire.',
+    formula: 'E = Δm · c²'
+  },
+  {
+    num: 5, cls: 'qn-f',
+    text: 'Quelle réaction produit l\'énergie des étoiles ? Et celle des centrales nucléaires ?',
+    hint: 'Les deux types de réactions ont chacun une application.',
+    answer: 'Les étoiles (dont le Soleil) produisent leur énergie par <strong>fusion</strong> de noyaux d\'hydrogène en hélium. Les centrales nucléaires utilisent la <strong>fission</strong> de l\'uranium-235 pour chauffer de l\'eau et produire de l\'électricité.',
+    formula: null
+  },
+  {
+    num: 6, cls: 'qn-s',
+    text: 'Qu\'est-ce que la réaction en chaîne dans une fission ?',
+    hint: 'Observe le nombre de neutrons libérés.',
+    answer: 'Lors de chaque fission, <strong>2 à 3 neutrons</strong> sont libérés. Chacun peut percuter un autre noyau d\'uranium et provoquer une nouvelle fission, qui libère encore des neutrons… La réaction se <strong>multiplie exponentiellement</strong> : c\'est la réaction en chaîne.',
+    formula: 'n → fission → 3n → 3 fissions → 9n → …'
+  }
+];
+
+function buildQuestions(){
+  const cont = document.getElementById('qs-main');
+  questions.forEach((q, i)=>{
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    if(i > 0) block.style.display = 'none';
+    block.innerHTML = `
+      <div class="q-head" onclick="toggleQ(this,${i})">
+        <div class="q-num ${q.cls}">${q.num}</div>
+        <div class="q-text">${q.text}</div>
+        <span class="q-arrow">›</span>
+      </div>
+      <div class="q-answer">
+        <strong style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:#999;display:block;margin-bottom:0.4rem;">Aide</strong>
+        ${q.hint}
+      </div>`;
+    cont.appendChild(block);
+  });
+}
+
+function toggleQ(head, i){
+  head.classList.toggle('open');
+  head.nextElementSibling.classList.toggle('visible');
+  const all = document.querySelectorAll('#qs-main .question-block');
+  const next = all[i+1];
+  if(next && next.style.display==='none'){
+    next.style.display='block';
+    next.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:400,easing:'ease-out'});
+  }
+  if(i === all.length-1){
+    document.getElementById('final-correction-card').style.display='block';
+  }
+}
+
+function askCorrectionCode(){
+  const code = prompt('Entrez le code de correction :');
+  if(code === 'puisciences') showCorrection();
+  else alert('Code incorrect');
+}
+
+function showCorrection(){
+  const cont = document.getElementById('full-correction');
+  cont.style.display = 'block';
+  let html = '';
+  questions.forEach(q=>{
+    html += `
+      <div class="question-block" style="margin-bottom:1rem;">
+        <div class="q-head open">
+          <div class="q-num ${q.cls}">${q.num}</div>
+          <div class="q-text">${q.text}</div>
+        </div>
+        <div class="q-answer visible">
+          <strong style="display:block;margin-bottom:0.5rem;color:#666;">Correction complète</strong>
+          ${q.answer}
+          ${q.formula?`<div class="answer-formula">${q.formula}</div>`:''}
+        </div>
+      </div>`;
+  });
+  cont.innerHTML = html;
+}
+
+window.addEventListener('DOMContentLoaded', buildQuestions);
+</script>
+</body>
+</html>

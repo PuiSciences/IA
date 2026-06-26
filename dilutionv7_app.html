@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dilution — PuiSciences</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  :root {
+    --ps-vert: #6fa882;
+    --ps-vert-pale: #d4ebe0;
+    --ps-vert-dark: #3d6b51;
+    --ps-bleu: #87ceeb;
+    --ps-bleu-pale: #d6f0fb;
+    --ps-bleu-dark: #2a7fa8;
+    --ps-rose: #e8799a;
+    --ps-rose-pale: #fce0e8;
+    --ps-rose-dark: #a03460;
+    --ps-gris: #888888;
+    --ps-gris-pale: #f2f2f0;
+    --ps-gris-dark: #444441;
+    --ps-fond: #fafaf8;
+    --ps-noir: #2c2c2a;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'Georgia', serif;
+    --font-sans: system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--ps-fond);
+    color: var(--ps-noir);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .page-header {
+    background: var(--ps-noir);
+    color: #f5f3ec;
+    padding: 1.6rem 2.5rem 1.4rem;
+    border-bottom: 3px solid var(--ps-rose);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .header-text h1 {
+    font-family: var(--font);
+    font-size: 1.65rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .tagline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+  }
+  .tagline-pill {
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .tp-v { background: var(--ps-vert); color: #fff; }
+  .tp-b { background: var(--ps-bleu-dark); color: #fff; }
+  .tp-r { background: var(--ps-rose); color: #fff; }
+  .tp-g { background: var(--ps-gris); color: #fff; }
+
+  /* Main */
+  .main-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ps-gris);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Callouts */
+  .callout {
+    border-left: 3px solid;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.75rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.88rem;
+  }
+  .callout-b { border-color: var(--ps-bleu); background: var(--ps-bleu-pale); color: var(--ps-bleu-dark); }
+  .callout-v { border-color: var(--ps-vert); background: var(--ps-vert-pale); color: var(--ps-vert-dark); }
+  .callout-r { border-color: var(--ps-rose); background: var(--ps-rose-pale); color: var(--ps-rose-dark); }
+  .callout-gris { border-color: var(--ps-gris); background: var(--ps-gris-pale); color: var(--ps-gris-dark); }
+  .callout strong { font-weight: 600; }
+
+  /* Buttons */
+  .btn-launch {
+    background: var(--ps-vert);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+  }
+  .btn-launch:hover { background: var(--ps-vert-dark); }
+
+.lab-space {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 40px;
+  align-items: center;
+  background: #fafafa;
+  padding: 30px;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+  margin-bottom: 40px;
+}
+
+
+@media (max-width: 768px) {
+  .lab-space {
+    grid-template-columns: 1fr; 
+    gap: 20px; 
+  }
+}
+  .animation-container {
+    position: relative;
+    height: 350px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 40px;
+    overflow: visible;
+  }
+  .beaker {
+    width: 160px;
+    height: 240px;
+    border: 5px solid var(--ps-noir);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    position: relative;
+    background: transparent;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .liquid {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30%;
+    background-color: #a01a1a;
+    transition: height 4s ease-in-out, background-color 4s ease-in-out;
+    z-index: 1;
+  }
+  .beads-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30%;
+    z-index: 3;
+    transition: height 4s ease-in-out;
+  }
+  .red-bead {
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle at 30% 30%, #ff4d4d, #990000);
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    animation: moveBead 5s infinite ease-in-out;
+  }
+  .bead1 { top: 20%; left: 20%; animation-delay: 0s; }
+  .bead2 { top: 60%; left: 30%; animation-delay: 0.5s; }
+  .bead3 { top: 40%; left: 70%; animation-delay: 1s; }
+  .bead4 { top: 70%; left: 10%; animation-delay: 1.5s; }
+  .bead5 { top: 10%; left: 80%; animation-delay: 2s; }
+  .bead6 { top: 80%; left: 60%; animation-delay: 2.5s; }
+  @keyframes moveBead {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(15px, -10px); }
+    50% { transform: translate(-10px, 15px); }
+    75% { transform: translate(-15px, -15px); }
+  }
+  .solvent-stream {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 0;
+    background-color: var(--ps-bleu);
+    opacity: 0;
+    z-index: 1;
+    transition: height 0.5s ease, opacity 0.3s ease;
+  }
+
+  /* Questions */
+  .level-panel-questions { display: none; }
+  .level-panel-questions.active { display: block; }
+  .question-block {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .q-head {
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-num {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #fff;
+  }
+  .qn-s { background: var(--ps-bleu-dark); }
+  .qn-p { background: var(--ps-vert-dark); }
+  .qn-t { background: var(--ps-rose-dark); }
+  .qn-sp { background: var(--ps-gris-dark); }
+  .q-text { font-size: 0.92rem; line-height: 1.5; flex: 1; }
+  .q-arrow { color: #ccc; font-size: 1rem; transition: transform 0.2s; margin-top: 4px; }
+  .q-head.open .q-arrow { transform: rotate(90deg); }
+  .q-answer {
+    display: none;
+    background: var(--ps-gris-pale);
+    padding: 0.9rem 1.1rem 0.9rem 3.1rem;
+    font-size: 0.88rem;
+    color: #444;
+    border-top: 1px solid #e0e0da;
+  }
+  .q-answer.visible { display: block; }
+  .answer-formula {
+    font-family: 'Courier New', monospace;
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.7rem;
+    margin-top: 0.4rem;
+    font-size: 0.92rem;
+    display: inline-block;
+  }
+
+  /* Footer */
+  .page-footer {
+    text-align: center;
+    padding: 1.5rem 0 0;
+    border-top: 1px solid #e0e0da;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+  .page-footer a { color: var(--ps-bleu-dark); }
+  
+    /* FORMULA BOX */
+  .formula-box {
+    background: var(--ps-noir); color: #f5f3ec;
+    border-radius: var(--radius); padding: 0.8rem 1.2rem;
+    font-family: 'Courier New', monospace; font-size: 1rem;
+    letter-spacing: 0.03em; margin: 0.8rem 0;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .formula-box .label {
+    font-family: var(--font-sans); font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: #aaa; min-width: 90px; flex-shrink: 0;
+  }
+  
+ /* Formules de dilution sous le bécher */
+.formulas-container {
+  position: absolute;
+  bottom: 5px; /* En dessous du bécher */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  color: var(--ps-noir);
+  z-index: 10;
+  font-size: 1.2rem;
+}
+
+.formula {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.formula-item {
+  transition: font-size 4s ease-in-out;
+}
+
+.formula-operator {
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.formula-operator.visible {
+  opacity: 1;
+}
+
+/* Tailles initiales */
+#cMere { font-size: 1.5rem; } /* Cmère GRAND */
+#vMere { font-size: 1rem; }   /* Vmère petit */
+#cFille { font-size: 1.5rem; } /* Cfille GRAND */
+#vFille { font-size: 1rem; }   /* Vfille petit */
+
+/* Style pour les fractions */
+.fraction {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    font-size: 1.1em; /* Légèrement plus grand pour la lisibilité */
+    margin: 0 0.2em;
+}
+
+.fraction::before {
+    content: "";
+    display: block;
+    border-top: 1px solid currentColor; /* Barre de fraction */
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.numerator, .denominator {
+    display: block;
+    text-align: center;
+    padding: 0 0.2em;
+}
+
+.numerator {
+    margin-bottom: -0.4em;
+}
+
+.denominator {
+    margin-top: -0.4em;
+}
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* Ratio 16:9 */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 2rem auto;
+  border-radius: var(--radius);
+  border: 1px solid #e0e0da;
+  background: #000;
+}
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.collapsible-card { overflow: hidden; }
+.collapsible-header {
+  padding: 1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.collapsible-header:hover { background: #f8f9fa; }
+.collapsible-icon {
+  transition: transform 0.3s;
+  font-size: 1.1rem;
+  color: var(--ps-gris);
+}
+.collapsible-content {
+  animation: fadeIn 0.3s ease-out;
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<div class="page-header">
+<div class="header-text">
+	  <canvas id="85fdb28a79d34941a1a2258120d7ff99"></canvas>
+    <script>
+    var images=['data:image/bmp;base64,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'];
+    function LoadImagesAndRender(){var loadedImages=0;for(var i=0;i<images.length;i++){var source=images[i];images[i]=new Image();images[i].src=source;images[i].onload=function(){loadedImages++;if(loadedImages==images.length){Render();}};}}
+    function Render(){let a=document.getElementById('85fdb28a79d34941a1a2258120d7ff99');let b=a.getContext('2d');a.width=30;a.height=30;b.drawImage(images[0],0,0,100,100,0,0,30,30);}
+    window.addEventListener('load',LoadImagesAndRender);
+    </script>
+    <h1>Simulation : Dilution</h1>
+    <div class="tagline">
+      <span class="tagline-pill tp-b">Facteur de dilution</span>
+      <span class="tagline-pill tp-v">Dilution</span>
+      <span class="tagline-pill tp-r">solvant</span>
+      <span class="tagline-pill tp-g">soluté</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrap">
+  <!-- Callouts -->
+
+
+  <!-- Simulation -->
+  <div class="card">
+    <div class="card-title">
+      <i class="ti ti-beaker"></i> Simulation : Dilution des solutions
+    </div>
+    <div class="lab-space">
+      <div>
+        <p><strong>Instructions :</strong></p>
+        <p>Cliquez sur le bouton pour verser le solvant (<span style="color: var(--ps-bleu-dark); font-weight: bold;">bleu clair</span>).</p>
+		</br>
+        <ul>
+          <li>Le volume augmente.</li>
+          <li>La couleur passe du <strong>rouge foncé</strong> au <strong>rose clair</strong> (la solution se dilue).</li>
+          <li><strong>Le nombre de billes rouges reste identique (6 billes)</strong> et elles continuent de bouger ! Elles sont juste plus espacées.</li>
+          <li>Il y a donc <strong>conservation de la matière !</strong> lors d'une dilution</li>
+		  <li>Le volume final est grand (V<sub>fille</sub>), mais la concentration (C<sub>fille</sub> est petite !!!</li>
+       
+
+	   </ul>
+        <button class="btn-launch" id="diluteBtn" onclick="triggerDilution()">
+          <i class="ti ti-plus"></i> Ajouter le solvant
+        </button>
+        <button class="btn-launch" id="resetBtn" onclick="resetExperience()" style="background-color: var(--ps-gris-dark); display: none;">
+          <i class="ti ti-refresh"></i> Réinitialiser
+        </button>
+      </div>
+      <div class="animation-container">
+        <div class="solvent-stream" id="stream"></div>
+        <div class="beaker">
+
+          <div class="liquid" id="liquid"></div>
+          <div class="beads-container" id="beadsContainer">
+            <div class="red-bead bead1"></div>
+            <div class="red-bead bead2"></div>
+            <div class="red-bead bead3"></div>
+            <div class="red-bead bead4"></div>
+            <div class="red-bead bead5"></div>
+            <div class="red-bead bead6"></div>
+          </div>
+        </div>
+				<div class="formulas-container">
+  <div class="formula">
+    <span class="formula-item" id="cMere">C<sub>mère</sub></span>
+    <span class="formula-operator visible" id="timesMere">×</span>
+    <span class="formula-item" id="vMere">V<sub>mère</sub></span>
+  </div>
+  <span class="formula-operator visible" id="equal">=</span>
+  <div class="formula">
+    <span class="formula-item" id="cFille">C<sub>fille</sub></span>
+    <span class="formula-operator visible" id="timesFille">×</span>
+    <span class="formula-item" id="vFille">V<sub>fille</sub></span>
+  </div>
+</div>
+      </div>
+    </div>
+  </div>
+  
+  <!---formules!--->
+  
+    <div class="callout callout-gris" style="margin-top:0.5rem;">
+    Lors de la dilution, la quantité de matière ne change pas, c'est LE truc à savoir.
+  </div>
+
+
+<div class="formula-box">
+  <span class="label">Conservation de la matière</span><br>
+  n<sub>fille</sub> = n<sub>mère</sub> d'où 
+   
+    C<sub>mère</sub> · V<sub>mère</sub> = C<sub>fille</sub> · V<sub>fille</sub>
+ 
+</div>
+
+  <div class="callout callout-v" style="margin-top:0.5rem;">
+    Deux façons de faire la dilution : par la conservation de la matière où le facteur de dilution.
+  </div>
+
+<!-- Facteur de dilution -->
+<div class="formula-box">
+  <span class="label">Facteur de dilution</span><br>
+  F =
+  <span class="fraction">
+    <span class="numerator">C<sub>mère</sub></span>
+    <span class="denominator">C<sub>fille</sub></span>
+  </span>
+  =
+  <span class="fraction">
+    <span class="numerator">V<sub>fille</sub></span>
+    <span class="denominator">V<sub>mère</sub></span>
+  </span>
+  
+</div>
+
+  <div class="callout callout-r" style="margin-top:0.5rem;">
+    F est toujours supérieur à 1, à toi de réfléchir à qui tu mets en haut ou en bas :)
+  </div>
+<!-- VIDÉO 1 -->
+<div class="card collapsible-card" style="margin-top: 2rem; margin-bottom: 2rem;">
+  <div class="collapsible-header" onclick="toggleVideo(1)">
+    <i class="ti ti-chevron-right collapsible-icon"></i>
+    <span class="card-title" style="margin: 0; cursor: pointer;">
+      <i class="ti ti-video"></i> Dilution : les calculs
+    </span>
+  </div>
+  <div id="video-section-1" class="collapsible-content" style="display: none;">
+    <div class="video-container">
+      <iframe id="explicative-video-1"
+              src=""
+              width="560"
+              height="315"
+              style="border: none;"
+              allow="fullscreen"
+              sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+
+ 
+  <!-- Questions -->
+  <div id="questions-card" class="card" style="margin-top: 2rem;">
+    <div class="card-title"><i class="ti ti-help-circle"></i> Questions — Dilution et conservation de la matière</div>
+    <div style="font-size:0.85rem; color:var(--ps-gris); margin:0.4rem 0 1rem 0.5rem;">
+      Clique sur une question pour débloquer la suivante.
+    </div>
+
+    <div id="panel-questions-seconde" class="level-panel-questions active">
+      <div id="qs-seconde"></div>
+    </div>
+    <div id="panel-questions-premiere" class="level-panel-questions">
+      <div id="qs-premiere"></div>
+    </div>
+    <div id="panel-questions-terminale" class="level-panel-questions">
+      <div id="qs-terminale"></div>
+    </div>
+    <div id="panel-questions-spe" class="level-panel-questions">
+      <div id="qs-spe"></div>
+    </div>
+  </div>
+
+  <!-- Correction finale -->
+  <div id="final-correction-card" class="card" style="margin-top:2rem;">
+    <div class="card-title">
+      <i class="ti ti-lock-open"></i> Correction complète
+    </div>
+    <div class="callout callout-b">
+      Toutes les questions ont été faites.
+    </div>
+    <button class="btn-launch" onclick="showFullCorrection()">
+      Afficher la correction complète
+    </button>
+    <div id="full-correction" style="margin-top:1.5rem; "></div>
+  </div>
+
+  <!-- Section "verire" -->
+<div class="card">
+  <div class="card-title">
+    <i class="ti ti-flask"></i> Verrerie de laboratoire
+  </div>
+
+  <div class="callout callout-b">
+    <strong>Bécher</strong> : Récipient ouvert, utilisé pour mélanger ou chauffer des solutions. <strong>Non calibré</strong> (pas de mesure précise).
+  </div>
+
+  <div class="callout callout-b">
+    <strong>Erlenmeyer</strong> : Bécher à col étroit, idéal pour les titrages ou les réactions avec dégagement gazeux.
+  </div>
+
+  <div class="callout callout-v">
+    <strong>Fiole jaugée</strong> : Récipient <strong>calibré</strong> pour préparer des solutions avec une précision élevée. Possède un <strong>trait de jauge</strong> unique.
+  </div>
+
+  <div class="callout callout-v">
+    <strong>Pipette jaugée</strong> : Permet de prélever <strong>un volume fixe et précis</strong> de liquide. Utilisée avec une poire à pipeter.
+  </div>
+
+  <div class="callout callout-v">
+    <strong>Pipette graduée</strong> : Permet de prélever <strong>des volumes variables</strong> (avec des graduations).
+  </div>
+
+  <div class="callout callout-b">
+    <strong>Éprouvette graduée</strong> : Mesure des volumes de liquides avec une précision moyenne.
+  </div>
+
+  <div class="callout callout-gris">
+    <strong>Burette graduée</strong> : Utilisée pour les titrages, permet de verser des volumes précis goutte à goutte.
+  </div>
+</div>
+
+<!-- VIDÉO 2 -->
+<div class="card collapsible-card" style="margin-top: 2rem; margin-bottom: 2rem;">
+  <div class="collapsible-header" onclick="toggleVideo(2)">
+    <i class="ti ti-chevron-right collapsible-icon"></i>
+    <span class="card-title" style="margin: 0; cursor: pointer;">
+      <i class="ti ti-video"></i> Dilution en TP, Manipule comme le boss
+    </span>
+  </div>
+  <div id="video-section-2" class="collapsible-content" style="display: none;">
+    <div class="video-container">
+      <iframe id="explicative-video-2"
+              src=""
+              width="560"
+              height="315"
+              style="border: none;"
+              allow="fullscreen"
+              sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="card">
+  <div class="card-title">
+    <i class="ti ti-droplet"></i> Mode opératoire d'une dilution
+  </div>
+
+  <ol>
+    <li>
+      <strong>Prélever</strong> le volume de solution mère avec une <strong>pipette jaugée</strong> ou <strong>graduée</strong>
+      <strong>jusqu'au trait de jauge</strong> (en tenant la pipette <strong>à la verticale</strong>).
+    </li>
+
+    <li>
+      <strong>Verser</strong> le liquide prélevé dans la <strong>fiole jaugée</strong> (en inclinant la pipette <strong>à 45°</strong>).
+    </li>
+
+    <li>
+      Ajouter le solvant (l'eau très souvent) dans la fiole à 1 cm en dessous du trait de jauge grâce à la pissette (sans que cette dernière ne touche le bord) et en prenant bien la solution sur les bords.
+    </li>
+
+    <li>
+      <strong>Compléter</strong> <strong>au trait de jauge</strong> avec de l'eau distillée :
+      <ul>
+        <li>Tenir la fiole <strong>à l'horizontale</strong> (niveau des yeux).</li>
+		<li>sécher le bord de la fiole sans toucher la solution au fond</li>
+		<li>Ajouter l'eau goutte à goutte avec une pipette pasteur.</li>
+        <li><strong>s'arreter quand le menisque</strong> est au niveau du trait</li>
+        
+      </ul>
+    </li>
+
+    <li>
+      <strong>Boucher</strong> la fiole avec un bouchon et <strong>homogénéiser</strong> en retournant plusieurs fois la fiole.
+    </li>
+  </ol>
+</div>
+
+
+
+
+
+ </div>
+
+
+
+<!-- FOOTER -->
+<div class="main-wrap" style="padding-top:0; padding-bottom:1rem;">
+  <div class="page-footer">
+    Gontier Adrien ·
+    <a href="https://bio.link/puisciences">PuiSciences</a> ·
+    <a href="https://play.google.com/store/apps/details?id=com.adriengontier.puisciences_college_light">Application Android</a> ·
+    <a href="https://www.instagram.com/puisciencest">Instagram</a> ·
+    <a href="https://www.tiktok.com/@puisciences">TikTok</a> ·
+    <a href="https://www.youtube.com/channel/UClWym-97b-IIA4_wuWJIzPA">Youtube</a>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+ function toggleVideo(videoNumber) {
+  const content = document.getElementById(`video-section-${videoNumber}`);
+  const icon = event.currentTarget.querySelector('.collapsible-icon');
+  const iframe = document.getElementById(`explicative-video-${videoNumber}`);
+
+  if (content.style.display === 'none' || !content.style.display) {
+    content.style.display = 'block';
+    icon.style.transform = 'rotate(90deg)';
+    // Charge la vidéo correspondante
+    if (videoNumber === 1) {
+      iframe.src = "https://tube-sciences-technologies.apps.education.fr/videos/embed/8UamPYqKX31oHdWAH1uVXs";
+    } else if (videoNumber === 2) {
+      iframe.src = "https://tube-sciences-technologies.apps.education.fr/videos/embed/upUSWydnFtxSw2gsT3zu5t";
+    }
+  } else {
+    content.style.display = 'none';
+    icon.style.transform = 'rotate(0deg)';
+    iframe.src = ""; // Libère la vidéo
+  }
+}
+
+
+ // === Simulation de dilution ===
+ function triggerDilution() {
+  const liquid = document.getElementById('liquid');
+  const beadsContainer = document.getElementById('beadsContainer');
+  const stream = document.getElementById('stream');
+  const diluteBtn = document.getElementById('diluteBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  // Afficher "=" et "×" pour Cmère
+  const equal = document.getElementById('equal');
+  const timesMere = document.getElementById('timesMere');
+  equal.classList.add('visible');
+  //timesMere.classList.add('visible');
+
+  // Animer les tailles : Cfille DIMINUE, Vfille AUGMENTE
+  setTimeout(() => {
+    document.getElementById('cFille').style.fontSize = '1rem'; // Cfille → petit
+    document.getElementById('vFille').style.fontSize = '1.5rem'; // Vfille → grand
+  }, 500);
+
+  // Animation du liquide
+  stream.style.opacity = '1';
+  stream.style.height = '120px';
+
+  setTimeout(() => {
+    liquid.style.height = '85%';
+    liquid.style.backgroundColor = '#fce0e8';
+    beadsContainer.style.height = '85%';
+  }, 500);
+
+  setTimeout(() => {
+    stream.style.opacity = '0';
+    stream.style.height = '0';
+    diluteBtn.style.display = 'none';
+    resetBtn.style.display = 'inline-flex';
+  }, 3500);
+}
+
+function resetExperience() {
+  const liquid = document.getElementById('liquid');
+  const beadsContainer = document.getElementById('beadsContainer');
+  const diluteBtn = document.getElementById('diluteBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  // Masquer "=" et "×" pour Cmère
+  const equal = document.getElementById('equal');
+  const timesMere = document.getElementById('timesMere');
+ // equal.classList.remove('visible');
+
+  // Réinitialiser les tailles
+  document.getElementById('cFille').style.fontSize = '1.5rem'; // Cfille → grand
+  document.getElementById('vFille').style.fontSize = '1rem';   // Vfille → petit
+
+  liquid.style.height = '30%';
+  liquid.style.backgroundColor = '#a01a1a';
+  beadsContainer.style.height = '30%';
+
+  diluteBtn.style.display = 'inline-flex';
+  resetBtn.style.display = 'none';
+}
+
+  // === Questions ===
+  const questionsDilution = {
+    seconde: [
+      {
+        num: 1,
+        cls: 'qn-s',
+        text: 'Qu’est-ce qu’une dilution ?',
+        hint: 'Pense à l’action d’ajouter de l’eau dans un sirop.',
+        answer: 'Une dilution consiste à ajouter du solvant (généralement de l’eau) à une solution pour diminuer sa concentration, tout en conservant la quantité de soluté.',
+        formula: null
+      },
+      {
+        num: 2,
+        cls: 'qn-s',
+        text: 'Que devient la quantité de soluté lors d’une dilution ?',
+        hint: 'Rappelle-toi : on ajoute uniquement du solvant.',
+        answer: 'La quantité de soluté (en moles) reste **constante**. On ne fait que diluer, pas ajouter ou retirer de soluté.',
+        formula: 'n₁ = n₂'
+      },
+      {
+        num: 3,
+        cls: 'qn-s',
+        text: 'Quelle relation lie les concentrations et les volumes avant et après dilution ?',
+        hint: 'Cherche une formule avec C et V.',
+        answer: 'La relation fondamentale de la dilution est : **C₁ × V₁ = C₂ × V₂**. La concentration et le volume sont inversement proportionnels.',
+        formula: 'C₁ × V₁ = C₂ × V₂'
+      },
+      {
+        num: 4,
+        cls: 'qn-s',
+        text: 'On dilue 50 mL d’une solution de concentration 0,10 mol/L dans 200 mL d’eau. Quelle est la nouvelle concentration ?',
+        hint: 'Calcule d’abord le volume final (V₂ = V₁ + V_eau).',
+        answer: 'Volume final V₂ = 250 mL. Avec C₁ × V₁ = C₂ × V₂ → C₂ = (0,10 × 50) / 250 = **0,02 mol/L**.',
+        formula: 'C₂ = (C₁ × V₁) / V₂ = 0,02 mol/L'
+      },
+      {
+        num: 5,
+        cls: 'qn-s',
+        text: 'Qu’est-ce que le facteur de dilution ?',
+        hint: 'C’est le rapport entre la concentration initiale et finale.',
+        answer: 'Le facteur de dilution F = **C₁ / C₂** ou **V₂ / V₁**.',
+        formula: 'F = C₁ / C₂ = V₂ / V₁'
+      },
+      {
+        num: 6,
+        cls: 'qn-s',
+        text: 'Si on dilue une solution 10 fois, comment évolue sa concentration ?',
+        hint: 'Utilise F = C₁ / C₂.',
+        answer: 'La concentration est divisée par 10 : **C₂ = C₁ / 10**.',
+        formula: 'C₂ = C₁ / F'
+      },
+      {
+        num: 7,
+        cls: 'qn-s',
+        text: 'Pourquoi la couleur de la solution change-t-elle lors d’une dilution ?',
+        hint: 'Pense à la concentration et à l’absorption de la lumière.',
+        answer: 'La couleur s’éclaircit car la concentration en soluté diminue. Moins il y a de soluté, moins la solution absorbe la lumière (ex : rouge foncé → rose clair).',
+        formula: null
+      },
+      {
+        num: 8,
+        cls: 'qn-s',
+        text: 'Quelle est la relation entre le facteur de dilution et le volume de solvant ajouté ?',
+        hint: 'Exprime V₂ en fonction de V₁ et V_solvant.',
+        answer: 'F = **1 + (V_solvant / V₁)**.',
+        formula: 'F = 1 + (V_solvant / V₁)'
+      },
+      {
+        num: 9,
+        cls: 'qn-s',
+        text: 'Dans la simulation, pourquoi le nombre de billes rouges reste-t-il constant ?',
+        hint: 'Les billes représentent le soluté.',
+        answer: 'Les billes représentent les **molécules de soluté**. On ajoute uniquement du solvant, donc la quantité de soluté (nombre de billes) ne change pas.',
+        formula: null
+      }
+    ],
+    premiere: [],
+    terminale: [],
+    spe: []
+  };
+
+  // Fonctions pour les questions
+  function buildQuestionsDilution(level) {
+    const cont = document.getElementById('qs-' + level);
+    if (!cont || !questionsDilution[level]) return;
+    cont.innerHTML = '';
+    questionsDilution[level].forEach((q, index) => {
+      const block = document.createElement('div');
+      block.className = 'question-block';
+      if (index > 0) block.style.display = 'none';
+      block.innerHTML = `
+        <div class="q-head" onclick="toggleQuestion(this, ${index}, '${level}')">
+          <div class="q-num ${q.cls}">${q.num}</div>
+          <div class="q-text">${q.text}</div>
+          <span class="q-arrow">›</span>
+        </div>
+        <div class="q-answer">
+          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em; color:#999; display:block; margin-bottom:0.4rem;">
+            Aide
+          </strong>
+          ${q.hint ? q.hint : 'Pas d\'aide pour cette question. Passe à la suivante !'}
+        </div>`;
+      cont.appendChild(block);
+    });
+  }
+
+  function toggleQuestion(head, index, level) {
+    head.classList.toggle('open');
+    head.nextElementSibling.classList.toggle('visible');
+    const allQuestions = document.querySelectorAll('#qs-' + level + ' .question-block');
+    const next = allQuestions[index + 1];
+    if (next && next.style.display === 'none') {
+      next.style.display = 'block';
+      next.animate([{ opacity:0, transform:'translateY(10px)' }, { opacity:1, transform:'translateY(0px)' }], {
+        duration:400,
+        easing:'ease-out'
+      });
+    }
+    if (index === allQuestions.length - 1) {
+      document.getElementById('final-correction-card').style.display = 'block';
+    }
+  }
+
+  function switchQuestionLevel(level) {
+    document.querySelectorAll('.level-panel-questions').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-questions-' + level).classList.add('active');
+  }
+
+
+  function showFullCorrection() {
+    const container = document.getElementById('full-correction');
+    container.style.display = 'block';
+    const qs = questionsDilution[selectedLevel];
+    let html = '';
+    qs.forEach(q => {
+      html += `
+        <div class="question-block" style="margin-bottom:1rem;">
+          <div class="q-head open">
+            <div class="q-num ${q.cls}">${q.num}</div>
+            <div class="q-text">${q.text}</div>
+          </div>
+          <div class="q-answer visible">
+            <strong style="display:block; margin-bottom:0.5rem; color:#666;">Correction complète</strong>
+            ${q.answer}
+            ${q.formula ? `<div class="answer-formula">${q.formula}</div>` : ''}
+          </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  // Initialisation
+  let selectedLevel = 'seconde';
+  window.addEventListener('DOMContentLoaded', () => {
+    buildQuestionsDilution('seconde');
+    switchQuestionLevel('seconde');
+  });
+</script>
+</body>
+</html>

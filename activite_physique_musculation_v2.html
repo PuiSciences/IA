@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physique & Musculation — PuiSciences</title>
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  :root {
+    /* ── Palette PuiSciences ── */
+    --ps-vert:      #6fa882;
+    --ps-vert-pale: #d4ebe0;
+    --ps-vert-dark: #3d6b51;
+    --ps-bleu:      #87ceeb;
+    --ps-bleu-pale: #d6f0fb;
+    --ps-bleu-dark: #2a7fa8;
+    --ps-rose:      #e8799a;
+    --ps-rose-pale: #fce0e8;
+    --ps-rose-dark: #a03460;
+    --ps-gris:      #888888;
+    --ps-gris-pale: #f2f2f0;
+    --ps-gris-dark: #444441;
+    --ps-fond:      #fafaf8;
+    --ps-noir:      #2c2c2a;
+
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'Georgia', serif;
+    --font-sans: system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--ps-fond);
+    color: var(--ps-noir);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+ 
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centre le bloc global */
+  text-align: center;
+}
+
+.header .logo {
+  position: absolute;
+  left: 20px;
+  height: 60px;
+}
+
+
+.header .title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  color: #555;
+}
+ 
+ 
+.page-header {
+  position: relative;
+  background: var(--ps-noir);
+  color: #f5f3ec;
+  padding: 1.6rem 2.5rem 1.4rem;
+  border-bottom: 3px solid var(--ps-rose);
+
+  display: flex;
+  justify-content: center; /* centre tout */
+  align-items: center;
+
+  text-align: center;
+}
+.header-logo {
+  position: absolute;
+  left: 20px;
+  height: 60px;
+}
+  .header-text .subtitle {
+    font-size: 0.78rem;
+    color: #aaa;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .header-text h1 {
+    font-family: var(--font);
+    font-size: 1.65rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .header-text .tagline {
+    font-size: 0.82rem;
+    color: #bbb;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tagline-pill {
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .tp-v { background: var(--ps-vert); color: #fff; }
+  .tp-b { background: var(--ps-bleu-dark); color: #fff; }
+  .tp-r { background: var(--ps-rose); color: #fff; }
+  .tp-g { background: var(--ps-gris); color: #fff; }
+
+  /* ── LEVEL TABS ── */
+  .level-bar {
+    background: #fff;
+    border-bottom: 1px solid #e0e0da;
+    padding: 0 2rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .level-tab {
+    padding: 0.85rem 1.2rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--ps-gris);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .level-tab:hover { color: var(--ps-noir); }
+
+  .level-tab[data-lv="seconde"].active  { color: var(--ps-bleu-dark);  border-bottom-color: var(--ps-bleu); }
+  .level-tab[data-lv="premiere"].active { color: var(--ps-vert-dark);  border-bottom-color: var(--ps-vert); }
+  .level-tab[data-lv="terminale"].active{ color: var(--ps-rose-dark);  border-bottom-color: var(--ps-rose); }
+  .level-tab[data-lv="spe"].active      { color: var(--ps-gris-dark);  border-bottom-color: var(--ps-gris); }
+
+  .level-tab .badge {
+    display: inline-block;
+    margin-left: 6px;
+    background: var(--ps-gris-pale);
+    color: var(--ps-gris);
+    font-size: 0.68rem;
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .level-tab[data-lv="seconde"].active  .badge { background: var(--ps-bleu-pale);  color: var(--ps-bleu-dark); }
+  .level-tab[data-lv="premiere"].active .badge { background: var(--ps-vert-pale);  color: var(--ps-vert-dark); }
+  .level-tab[data-lv="terminale"].active.badge { background: var(--ps-rose-pale);  color: var(--ps-rose-dark); }
+  .level-tab[data-lv="spe"].active      .badge { background: var(--ps-gris-pale);  color: var(--ps-gris-dark); }
+
+  /* ── MAIN ── */
+  .main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 2.5rem; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid #e0e0da;
+  }
+  .section-header .icon-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font);
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: var(--ps-noir);
+  }
+  .section-header .level-tag {
+    margin-left: auto;
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* level colours for icons/tags */
+  .ic-s  { background: var(--ps-bleu-pale);  color: var(--ps-bleu-dark); }
+  .ic-p  { background: var(--ps-vert-pale);  color: var(--ps-vert-dark); }
+  .ic-t  { background: var(--ps-rose-pale);  color: var(--ps-rose-dark); }
+  .ic-sp { background: var(--ps-gris-pale);  color: var(--ps-gris-dark); }
+
+  .tag-s  { background: var(--ps-bleu-pale);  color: var(--ps-bleu-dark); }
+  .tag-p  { background: var(--ps-vert-pale);  color: var(--ps-vert-dark); }
+  .tag-t  { background: var(--ps-rose-pale);  color: var(--ps-rose-dark); }
+  .tag-sp { background: var(--ps-gris-pale);  color: var(--ps-gris-dark); }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: var(--ps-noir);
+    color: #f5f3ec;
+    border-radius: var(--radius);
+    padding: 1rem 1.4rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.05rem;
+    letter-spacing: 0.03em;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .formula-box .label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+  /* vecteurs : flèche au-dessus via ::after sur span */
+  .vec {
+    display: inline-block;
+    position: relative;
+    padding-top: 0.3em;
+  }
+  .vec::before {
+    content: '→';
+    position: absolute;
+    top: -0.15em;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65em;
+    line-height: 1;
+    color: var(--ps-rose);
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .callout-s    { border-color: var(--ps-bleu);  background: var(--ps-bleu-pale);  color: var(--ps-bleu-dark); }
+  .callout-p    { border-color: var(--ps-vert);  background: var(--ps-vert-pale);  color: var(--ps-vert-dark); }
+  .callout-t    { border-color: var(--ps-rose);  background: var(--ps-rose-pale);  color: var(--ps-rose-dark); }
+  .callout-sp   { border-color: var(--ps-gris);  background: var(--ps-gris-pale);  color: var(--ps-gris-dark); }
+  .callout-warn { border-color: var(--ps-rose);  background: var(--ps-rose-pale);  color: var(--ps-rose-dark); }
+  .callout strong { font-weight: 600; }
+
+  /* ── CALC WRAP ── */
+  .calc-wrap {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    padding: 1.4rem;
+  }
+  .calc-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ps-gris);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .slider-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 70px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+  }
+  .slider-label { font-size: 0.88rem; color: #555; }
+  input[type="range"] { width: 100%; cursor: pointer; }
+  input[type="range"]::-webkit-slider-thumb { background: var(--ps-vert); }
+
+  .slider-val {
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+    color: var(--ps-noir);
+  }
+  .result-band {
+    border-left: 3px solid var(--ps-vert);
+    background: var(--ps-vert-pale);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.8rem 1rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .result-band .res-label { font-size: 0.85rem; color: var(--ps-vert-dark); }
+  .result-band .res-val {
+    font-family: var(--font);
+    font-size: 1.6rem;
+    color: var(--ps-noir);
+  }
+  .result-band .res-unit { font-size: 0.85rem; color: var(--ps-gris); }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+  }
+  .card h3 {
+    font-size: 0.85rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--ps-gris); margin-bottom: 0.5rem;
+  }
+  .card .big-sym { font-family: var(--font); font-size: 2rem; color: var(--ps-noir); line-height: 1; margin-bottom: 0.2rem; }
+  .card p { font-size: 0.88rem; color: #555; margin-top: 0.4rem; }
+
+  /* ── QUESTION BLOCKS ── */
+  .question-block {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .q-head {
+    padding: 0.9rem 1.1rem;
+    display: flex; align-items: flex-start; gap: 0.8rem;
+    cursor: pointer; user-select: none;
+  }
+  .q-num {
+    min-width: 28px; height: 28px;
+    border-radius: 50%;
+    font-size: 0.8rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+    color: #fff;
+  }
+  .qn-s  { background: var(--ps-bleu-dark); }
+  .qn-p  { background: var(--ps-vert-dark); }
+  .qn-t  { background: var(--ps-rose-dark); }
+  .qn-sp { background: var(--ps-gris-dark); }
+  .qn-m  { background: var(--ps-gris); }
+
+  .q-text { font-size: 0.92rem; line-height: 1.5; flex: 1; }
+  .q-arrow { color: #ccc; font-size: 1rem; transition: transform 0.2s; margin-top: 4px; }
+  .q-head.open .q-arrow { transform: rotate(90deg); }
+  .q-answer {
+    display: none;
+    background: var(--ps-gris-pale);
+    padding: 0.9rem 1.1rem 0.9rem 3.1rem;
+    font-size: 0.88rem; color: #444;
+    border-top: 1px solid #e0e0da;
+  }
+  .q-answer.visible { display: block; }
+  .q-answer .answer-formula {
+    font-family: 'Courier New', monospace;
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.7rem;
+    margin-top: 0.4rem;
+    font-size: 0.92rem;
+    display: inline-block;
+  }
+  .q-answer a { color: var(--ps-bleu-dark); }
+
+  /* ── DATA TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .data-table th {
+    background: var(--ps-noir); color: #f5f3ec;
+    padding: 0.5rem 0.8rem; text-align: left;
+    font-weight: 500; font-size: 0.78rem; letter-spacing: 0.04em;
+  }
+  .data-table td { padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--ps-gris-pale); color: #333; }
+  .data-table tr:hover td { background: var(--ps-gris-pale); }
+  .data-table .highlight { font-weight: 700; color: var(--ps-noir); }
+  .data-table td.male   { color: var(--ps-bleu-dark); font-weight: 500; }
+  .data-table td.female { color: var(--ps-rose-dark); font-weight: 500; }
+
+  /* ── TABS ── */
+  .tab-set { display: flex; gap: 0; border-bottom: 1px solid #e0e0da; margin-bottom: 1.2rem; }
+  .tab-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+    border: none; background: transparent; color: var(--ps-gris);
+    cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+    text-transform: uppercase;
+  }
+  .tab-btn.active { color: var(--ps-noir); border-bottom-color: var(--ps-vert); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── TP ── */
+  .tp-step { display: flex; gap: 1rem; margin-bottom: 1.2rem; align-items: flex-start; }
+  .tp-step-num {
+    min-width: 36px; height: 36px; border-radius: 50%;
+    background: var(--ps-vert-pale); border: 1px solid var(--ps-vert);
+    color: var(--ps-vert-dark); font-size: 0.85rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .tp-step-content h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .tp-step-content p  { font-size: 0.88rem; color: #555; }
+  .tp-step-content ul { font-size: 0.88rem; color: #555; margin-top: 0.3rem; padding-left: 1.2rem; }
+  .tp-step-content ul li { margin-bottom: 0.2rem; }
+  .measure-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 0.5rem; }
+  .measure-table th { text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ps-gris); padding: 0.3rem 0.5rem; border-bottom: 1px solid #e0e0da; }
+  .measure-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--ps-gris-pale); }
+  .measure-table input[type="number"] { width: 70px; border: 1px solid #e0e0da; border-radius: 4px; padding: 2px 6px; font-size: 0.85rem; }
+
+  /* ── CHART ── */
+  .grip-chart-wrap { position: relative; height: 240px; margin: 1rem 0; }
+
+  /* ── LEVEL PANELS ── */
+  .level-panel { display: none; }
+  .level-panel.active { display: block; }
+
+  /* ── ACCENT STRIPE per level ── */
+  #panel-seconde  .section-header  { border-color: var(--ps-bleu-pale); }
+  #panel-premiere .section-header  { border-color: var(--ps-vert-pale); }
+  #panel-terminale .section-header { border-color: var(--ps-rose-pale); }
+  #panel-spe      .section-header  { border-color: #e0e0da; }
+
+  @media print {
+    .level-bar, .level-tab:not(.active) { display: none; }
+    .level-panel:not(.active) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="page-header">
+
+   <div class="title-block">
+
+  <div class="header-text">
+       <div class="header-logo">
+    <!-- Logo PuiSciences vectorisé SVG -->
+<canvas id="85fdb28a79d34941a1a2258120d7ff99"></canvas>
+<script>
+var images=['data:image/bmp;base64,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'];function LoadImagesAndRender(){var loadedImages=0;for(var i=0;i<images.length;i++){var source=images[i];images[i]=new Image();images[i].src=source;images[i].onload=function(){loadedImages++;if (loadedImages==images.length){Render();}};}}function Render(){let a=document.getElementById('85fdb28a79d34941a1a2258120d7ff99');let b=a.getContext('2d');a.width=100;a.height=100;b.drawImage(images[0],0,0,100,100,0,0,100,100);}window.addEventListener('load', LoadImagesAndRender);</script>
+
+  </div>
+    <div class="subtitle">Physique-chimie &nbsp;·&nbsp; Sciences de l'ingénieur</div>
+    <h1>Physique et ... la salle ! 🏋️</h1>
+    <div class="tagline">
+      <span class="tagline-pill tp-b">Énergie</span>
+      <span class="tagline-pill tp-v">Travail &amp; puissance</span>
+      <span class="tagline-pill tp-r">Moment de force</span>
+      <span class="tagline-pill tp-g">Grip &amp; longévité</span>
+    </div>
+	</div>
+  </div>
+</div>
+
+<!-- ══════════ ONGLETS NIVEAU ══════════ -->
+<div class="level-bar">
+  <button class="level-tab active" data-lv="seconde" onclick="switchLevel('seconde',this)">
+    Seconde <span class="badge">Tronc commun</span>
+  </button>
+  <button class="level-tab" data-lv="premiere" onclick="switchLevel('premiere',this)">
+    1re STI2D / STL <span class="badge">Énergie &amp; puissance</span>
+  </button>
+  <button class="level-tab" data-lv="terminale" onclick="switchLevel('terminale',this)">
+    Tle STI2D / STL <span class="badge">Moments &amp; bilan</span>
+  </button>
+  <button class="level-tab" data-lv="spe" onclick="switchLevel('spe',this)">
+    1re / Tle Spécialité <span class="badge">Approfondissement</span>
+  </button>
+</div>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════
+     SECONDE
+═══════════════════════════════════ -->
+<div class="level-panel active" id="panel-seconde">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-s"><i class="ti ti-bolt" aria-hidden="true"></i></div>
+      <h2>Partie 1 — Forces et poids</h2>
+      <span class="level-tag tag-s">Seconde</span>
+    </div>
+
+    <div class="callout callout-s">
+      <strong>Contexte :</strong> Pour soulever une barre, il faut vaincre son poids — la force d'attraction de la Terre. Comprendre les forces en jeu, c'est comprendre pourquoi certains mouvements sont plus difficiles que d'autres.
+    </div>
+
+    <!-- Formule avec vecteurs -->
+    <div class="formula-box">
+      <span class="label">Poids</span>
+      <span class="vec">P</span>&nbsp;=&nbsp;m&nbsp;&times;&nbsp;g
+    </div>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:0.4rem;">
+      <span class="vec" style="font-family:Georgia,serif; font-size:1rem; color:var(--ps-noir);">P</span> = poids (N) &nbsp;·&nbsp; m = masse (kg) &nbsp;·&nbsp; g = 9,81 N/kg (≈ 10 N/kg en classe)
+    </p>
+	    <p style="font-size:0.83rem; color:var(--ps-rose-dark); margin-bottom:1rem;">
+      ⚠ Le poids est un Force en Newton (N), la masse représente la quantité de matière est en kilogramme (kg). Sur la Lune, la quantité de matière d'un objet est identique que s'il et sur Terre, mais l'attraction de la Lune est plus faible. La force avec laquelle il sera attiré vers le bas, plus faible.
+    </p>
+    <p style="font-size:0.83rem; color:var(--ps-rose-dark); margin-bottom:1rem;">
+      ⚠ La flèche indique que le poids (P) est un <strong>vecteur</strong> : il a une valeur, une direction (dans le cas du poids verticale) et un sens (vers le bas dans le cas du poids).
+    </p>
+
+    <div class="calc-wrap">
+      <div class="calc-title"><i class="ti ti-calculator" aria-hidden="true"></i> Calcul du poids d'une barre</div>
+      <div class="slider-row">
+        <span class="slider-label">Masse m (kg)</span>
+        <input type="range" min="5" max="100" value="20" id="s-masse" step="1" oninput="calcPoids()">
+        <span class="slider-val" id="v-masse">20 kg</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">g (N/kg)</span>
+        <input type="range" min="9.6" max="10" value="9.81" id="s-g" step="0.01" oninput="calcPoids()">
+        <span class="slider-val" id="v-g">9.81</span>
+      </div>
+      <div class="result-band">
+        <span class="res-label">Poids de la barre =</span>
+        <span class="res-val" id="r-poids">196</span>
+        <span class="res-unit">N</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-s"><i class="ti ti-arrows-up-down" aria-hidden="true"></i></div>
+      <h2>Partie 2 — Équilibre des forces</h2>
+      <span class="level-tag tag-s">Seconde</span>
+    </div>
+
+    <p style="margin-bottom:1rem; font-size:0.9rem; color:#444;">
+      Une barre posée au sol est soumise à deux forces vectorielles qui s'équilibrent.
+    </p>
+
+    <!-- Formule équilibre vecteurs -->
+    <div class="formula-box">
+      <span class="label">Équilibre</span>
+      <span class="vec">P</span>&nbsp;+&nbsp;<span class="vec">R</span>&nbsp;=&nbsp;<span class="vec">0</span>
+    </div>
+    <p style="font-size:0.83rem; color:var(--ps-rose-dark); margin-bottom:1rem;">
+      ⚠ <span class="vec" style="font-family:Georgia,serif; font-size:0.95rem;">P</span> et <span class="vec" style="font-family:Georgia,serif; font-size:0.95rem;">R</span> sont des vecteurs : même norme, même direction (verticale), mais sens opposés.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3><i class="ti ti-arrow-down" aria-hidden="true"></i> Poids <span class="vec" style="font-size:1.1rem; font-family:Georgia,serif;">P</span></h3>
+        <div class="big-sym" style="color:var(--ps-rose-dark);">↓</div>
+        <p>Force exercée par la Terre sur la barre. Toujours dirigée vers le bas.</p>
+      </div>
+      <div class="card">
+        <h3><i class="ti ti-arrow-up" aria-hidden="true"></i> Réaction du sol <span class="vec" style="font-size:1.1rem; font-family:Georgia,serif;">R</span></h3>
+        <div class="big-sym" style="color:var(--ps-bleu-dark);">↑</div>
+        <p>Force exercée par le sol sur la barre. Vers le haut, de même valeur que P.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>Principe d'inertie :</strong> quand la somme des forces est nulle (<span class="vec" style="font-family:Georgia,serif;">P</span> + <span class="vec" style="font-family:Georgia,serif;">R</span> = <span class="vec" style="font-family:Georgia,serif;">0</span>), la barre ne bouge pas (ou est en mouvement rectiligne uniforme). Pour la soulever, il faut exercer une force musculaire F<sub>muscle</sub> &gt; P.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-s"><i class="ti ti-help-circle" aria-hidden="true"></i></div>
+      <h2>Questions — Seconde</h2>
+    
+	<div style="
+  font-size:0.85rem;
+  color:var(--ps-gris);
+  margin:0.4rem 0 1rem 0.5rem;
+">
+  Clique sur une question pour débloquer la suivante.
+</div>
+	
+	
+	
+	</div>
+    <div id="qs-seconde"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-s"><i class="ti ti-flask" aria-hidden="true"></i></div>
+      <h2>Manipulation — Seconde</h2>
+    </div>
+    <div id="qs-primaire"></div>
+  </div>
+
+</div><!-- /seconde -->
+
+
+<!-- ═══════════════════════════════════
+     PREMIERE STI
+═══════════════════════════════════ -->
+<div class="level-panel" id="panel-premiere">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-p"><i class="ti ti-bolt" aria-hidden="true"></i></div>
+      <h2>Partie 2 — Travail mécanique et énergie</h2>
+      <span class="level-tag tag-p">1re STI2D / STL</span>
+    </div>
+
+    <div class="callout callout-p">
+      Soulever une barre, c'est fournir un <strong>travail</strong>. Ce travail dépend de la force appliquée et de la distance parcourue.
+    </div>
+
+    <div class="formula-box">
+      <span class="label">Travail</span>
+      W = <span class="vec">F</span> · d · cos(α)
+    </div>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:0.4rem;">
+      W = travail (J) &nbsp;·&nbsp; <span class="vec" style="font-family:Georgia,serif; font-size:0.95rem; color:var(--ps-noir);">F</span> = force (N, vecteur) &nbsp;·&nbsp; d = déplacement (m) &nbsp;·&nbsp; α = angle entre force et déplacement
+    </p>
+    <p style="font-size:0.83rem; color:var(--ps-vert-dark); margin-bottom:1rem;">
+      Cas pratique : si la force et le déplacement sont dans le même sens (soulever = α = 0°), alors cos(0°) = 1 et <strong>W = F × d</strong>.
+    </p>
+
+    <div class="calc-wrap" style="margin-bottom:1.5rem;">
+      <div class="calc-title"><i class="ti ti-calculator" aria-hidden="true"></i> Calculateur de travail</div>
+      <div class="slider-row">
+        <span class="slider-label">Force F (N)</span>
+        <input type="range" min="50" max="500" value="150" id="p-force" step="5" oninput="calcTravail()">
+        <span class="slider-val" id="v-force">150 N</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Distance d (m)</span>
+        <input type="range" min="0.1" max="2.5" value="0.8" id="p-dist" step="0.1" oninput="calcTravail()">
+        <span class="slider-val" id="v-dist">0.8 m</span>
+      </div>
+	    <div class="slider-row">
+    <span class="slider-label">Angle α (°)</span>
+    <input type="range" min="0" max="180" value="0" id="p-angle" step="1" oninput="calcTravail()">
+    <span class="slider-val" id="v-angle">0°</span>
+  </div>
+      <div class="result-band">
+        <span class="res-label">Travail W =</span>
+        <span class="res-val" id="r-travail">120</span>
+        <span class="res-unit">J</span>
+      </div>
+    </div>
+	<canvas id="canvasVec" width="300" height="200"
+  style="margin-top:10px; background:#f7f7f7; border-radius:10px;">
+</canvas>
+
+    <div class="formula-box">
+      <span class="label">Puissance</span>
+      P = W / t
+    </div>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">
+      P = puissance (W) &nbsp;·&nbsp; W = travail (J) &nbsp;·&nbsp; t = durée (s)
+    </p>
+
+    <div class="calc-wrap">
+      <div class="calc-title"><i class="ti ti-calculator" aria-hidden="true"></i> Calculateur de puissance</div>
+      <div class="slider-row">
+        <span class="slider-label">Travail W (J)</span>
+        <input type="range" min="50" max="600" value="120" id="p-w" step="5" oninput="calcPuissance()">
+        <span class="slider-val" id="v-w">120 J</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Durée t (s)</span>
+        <input type="range" min="0.5" max="5" value="2" id="p-t" step="0.1" oninput="calcPuissance()">
+        <span class="slider-val" id="v-t">2.0 s</span>
+      </div>
+      <div class="result-band">
+        <span class="res-label">Puissance P =</span>
+        <span class="res-val" id="r-puissance">60</span>
+        <span class="res-unit">W</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-p"><i class="ti ti-help-circle" aria-hidden="true"></i></div>
+      <h2>Questions — 1re STI2D / STL</h2>
+    </div>
+    <div id="qs-premiere"></div>
+  </div>
+
+</div><!-- /premiere -->
+
+
+<!-- ═══════════════════════════════════
+     TERMINALE STI
+═══════════════════════════════════ -->
+<div class="level-panel" id="panel-terminale">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-t"><i class="ti ti-rotate-clockwise" aria-hidden="true"></i></div>
+      <h2>Partie 3 — Moment d'une force</h2>
+      <span class="level-tag tag-t">Tle STI2D / STL</span>
+    </div>
+
+    <div class="callout callout-t">
+      Un même poids produit des effets très différents selon la distance à l'axe de rotation (l'articulation). C'est le <strong>moment de force</strong> — fondamental pour analyser les mouvements en musculation.
+    </div>
+
+    <div class="formula-box">
+      <span class="label">Moment</span>
+      M = <span class="vec">F</span> × d × sin(θ)
+    </div>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">
+      M = moment (N·m) &nbsp;·&nbsp; <span class="vec" style="font-family:Georgia,serif; font-size:0.95rem; color:var(--ps-noir);">F</span> = force (N, vecteur) &nbsp;·&nbsp; d = bras de levier (m) &nbsp;·&nbsp; θ = angle entre la force et le bras
+    </p>
+
+    <div class="calc-wrap">
+      <div class="calc-title"><i class="ti ti-calculator" aria-hidden="true"></i> Calculateur de moment</div>
+      <div class="slider-row">
+        <span class="slider-label">Force F (N)</span>
+        <input type="range" min="50" max="500" value="100" id="t-force" step="5" oninput="calcMoment()">
+        <span class="slider-val" id="tv-force">100 N</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Bras de levier (m)</span>
+        <input type="range" min="0.1" max="0.8" value="0.35" id="t-levier" step="0.01" oninput="calcMoment()">
+        <span class="slider-val" id="tv-levier">0.35 m</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Angle θ (°)</span>
+        <input type="range" min="10" max="90" value="90" id="t-angle" step="1" oninput="calcMoment()">
+        <span class="slider-val" id="tv-angle">90°</span>
+      </div>
+      <div class="result-band">
+        <span class="res-label">Moment M =</span>
+        <span class="res-val" id="r-moment">35.0</span>
+        <span class="res-unit">N·m</span>
+      </div>
+    </div>
+
+    <div class="card-grid" style="margin-top:1.2rem;">
+      <div class="card" style="border-top:3px solid var(--ps-vert);">
+        <h3>Curl biceps — coude fléchi</h3>
+        <p>Bras de levier ≈ 0,25 m. Moment modéré. Mouvement naturel, sollicitation localisée du biceps.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--ps-rose);">
+        <h3>Bras tendu — axe épaule</h3>
+        <p>Bras de levier ≈ 0,55 m. Moment bien plus grand pour la <em>même</em> masse. Bien plus difficile !</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-t"><i class="ti ti-help-circle" aria-hidden="true"></i></div>
+      <h2>Questions — Terminale STI2D / STL</h2>
+    </div>
+    <div id="qs-terminale"></div>
+  </div>
+
+</div><!-- /terminale -->
+
+
+<!-- ═══════════════════════════════════
+     SPE
+═══════════════════════════════════ -->
+<div class="level-panel" id="panel-spe">
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-sp"><i class="ti ti-chart-line" aria-hidden="true"></i></div>
+      <h2>Partie 4 : grip strength et longévité</h2>
+      <span class="level-tag tag-sp">1re / Tle Spé</span>
+    </div>
+
+    <div class="callout callout-sp">
+      <strong>Source :</strong> Tomkinson et al. (2025), <em>Journal of Sport and Health Science</em> — étude systématique portant sur <strong>2,4 millions d'adultes</strong>, 69 pays, adultes de 20 à 100+ ans.
+      La force de préhension (<em>grip strength</em>) est un marqueur fiable de la force musculaire globale et un prédicteur robuste de la santé à long terme.
+    </div>
+
+    <div class="tab-set">
+      <button class="tab-btn active" onclick="showTab('tab-data',this)">Tableau de données</button>
+      <button class="tab-btn" onclick="showTab('tab-graph',this)">Visualisation</button>
+      <button class="tab-btn" onclick="showTab('tab-tp',this)">TP en salle</button>
+    </div>
+
+    <div class="tab-content active" id="tab-data">
+      <p style="font-size:0.88rem; color:#555; margin-bottom:0.8rem;">
+        Valeurs de la force de préhension absolue par groupe d'âge (kg), ajustées sur protocole de référence.
+        <strong style="color:var(--ps-vert-dark);">Ligne surlignée = pic de force (30–34 ans).</strong>
+      </p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Âge (ans)</th>
+            <th style="color:var(--ps-bleu-pale);">Hommes P20</th>
+            <th style="color:var(--ps-bleu-pale);">Hommes P50</th>
+            <th style="color:var(--ps-bleu-pale);">Hommes P80</th>
+            <th style="color:var(--ps-rose-pale);">Femmes P20</th>
+            <th style="color:var(--ps-rose-pale);">Femmes P50</th>
+            <th style="color:var(--ps-rose-pale);">Femmes P80</th>
+          </tr>
+        </thead>
+        <tbody id="grip-table-body"></tbody>
+      </table>
+      <p style="font-size:0.78rem; color:#aaa; margin-top:0.5rem;">P20 = 20e percentile · P50 = médiane · P80 = 80e percentile. Source : Tomkinson et al. 2025.</p>
+    </div>
+
+    <div class="tab-content" id="tab-graph">
+      <div class="grip-chart-wrap">
+        <canvas id="gripCanvas" style="width:100%; height:240px;"></canvas>
+      </div>
+      <p style="font-size:0.8rem; color:#aaa; text-align:center; margin-top:0.4rem;">Force médiane (kg) en fonction de l'âge — hommes (bleu) et femmes (rose)</p>
+    </div>
+
+    <div class="tab-content" id="tab-tp">
+      <div class="callout callout-p" style="margin-bottom:1.2rem;">
+        <strong>Matériel :</strong> dynamomètre à main, toise, chronomètre. À réaliser en classe puis en salle de sport.
+      </div>
+      <div class="tp-step">
+        <div class="tp-step-num">1</div>
+        <div class="tp-step-content">
+          <h4>Mesures anthropométriques</h4>
+          <p>Mesurer la taille H (m) et la masse m (kg) de chaque participant.</p>
+        </div>
+      </div>
+      <div class="tp-step">
+        <div class="tp-step-num">2</div>
+        <div class="tp-step-content">
+          <h4>Mesure de la force de préhension</h4>
+          <ul>
+            <li>Position assise, épaule légèrement adductée, coude fléchi à 90°.</li>
+            <li>Serrer le dynamomètre 3 fois par main, noter la valeur maximale (kg).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tp-step">
+        <div class="tp-step-num">3</div>
+        <div class="tp-step-content">
+          <h4>Normalisation par la taille</h4>
+          <p>Calculer le grip normalisé pour comparer des morphologies différentes :</p>
+          <div class="formula-box" style="margin-top:0.5rem; font-size:0.95rem;">
+            <span class="label">Grip norm.</span>
+            G<sub>norm</sub> = G (kg) / H² (m²)
+          </div>
+        </div>
+      </div>
+      <div class="tp-step">
+        <div class="tp-step-num">4</div>
+        <div class="tp-step-content">
+          <h4>Tableau de relevé</h4>
+          <table class="measure-table">
+            <thead>
+              <tr>
+                <th>Participant</th><th>Taille (m)</th><th>Masse (kg)</th>
+                <th>Grip D (kg)</th><th>Grip G (kg)</th>
+                <th>Grip max</th><th>G normalisé</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td><input type="number" step="0.01"></td><td><input type="number"></td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td></td><td></td></tr>
+              <tr><td>2</td><td><input type="number" step="0.01"></td><td><input type="number"></td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td></td><td></td></tr>
+              <tr><td>3</td><td><input type="number" step="0.01"></td><td><input type="number"></td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td></td><td></td></tr>
+              <tr><td>4</td><td><input type="number" step="0.01"></td><td><input type="number"></td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tp-step">
+        <div class="tp-step-num">5</div>
+        <div class="tp-step-content">
+          <h4>Comparaison aux normes internationales</h4>
+          <p>Reportez vos valeurs dans le tableau de données. À quel percentile vous situez-vous ? Que peut-on conclure sur votre force musculaire ?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="icon-circle ic-sp"><i class="ti ti-help-circle" aria-hidden="true"></i></div>
+      <h2>Questions — Spécialité</h2>
+    </div>
+    <div id="qs-spe"></div>
+  </div>
+
+</div><!-- /spe -->
+
+<!-- ══════════ FOOTER ══════════ -->
+<div style="text-align:center; padding: 2rem 0 0; border-top: 1px solid #e0e0da; margin-top:1rem;">
+ 
+
+  <span style="font-size:0.8rem; color:#aaa;">  <a href="https://bio.link/puisciences">PuiSciences</a> - Gontier Adrien · Activité lycée ·
+  <a href="https://play.google.com/store/apps/details?id=com.adriengontier.puisciences_college_light">Application Android</a>
+        </span>
+</div>
+
+</div><!-- /main -->
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+
+const gripData = [
+  { age:'20–24', mP20:40.5, mP50:48.0, mP80:56.0, fP20:24.0, fP50:28.6, fP80:33.6 },
+  { age:'25–29', mP20:42.1, mP50:49.3, mP80:56.7, fP20:24.5, fP50:29.4, fP80:34.6 },
+  { age:'30–34', mP20:42.2, mP50:49.7, mP80:57.4, fP20:24.4, fP50:29.7, fP80:35.2 },
+  { age:'35–39', mP20:41.5, mP50:49.5, mP80:57.5, fP20:24.1, fP50:29.7, fP80:35.4 },
+  { age:'40–44', mP20:40.4, mP50:48.8, mP80:57.1, fP20:23.7, fP50:29.4, fP80:35.2 },
+  { age:'45–49', mP20:39.0, mP50:47.6, mP80:56.2, fP20:23.1, fP50:28.9, fP80:34.8 },
+  { age:'50–54', mP20:37.4, mP50:46.2, mP80:54.8, fP20:22.4, fP50:28.2, fP80:34.0 },
+  { age:'55–59', mP20:35.6, mP50:44.4, mP80:53.1, fP20:21.5, fP50:27.3, fP80:33.0 },
+  { age:'60–64', mP20:33.6, mP50:42.4, mP80:51.1, fP20:20.6, fP50:26.2, fP80:31.8 },
+  { age:'65–69', mP20:31.5, mP50:40.1, mP80:48.8, fP20:19.5, fP50:25.0, fP80:30.5 },
+  { age:'70–74', mP20:29.3, mP50:37.7, mP80:46.3, fP20:18.3, fP50:23.6, fP80:28.9 },
+  { age:'75–79', mP20:27.0, mP50:35.1, mP80:43.5, fP20:17.0, fP50:22.1, fP80:27.2 },
+];
+
+const questions = {
+primaire: [
+  {
+    num: 1,
+    cls: 'qn-s',
+    text: 'Quelles sont les 3 caractéristiques d’un vecteur ?',
+    hint: 'Direction, sens et valeur (norme). <a href="https://www.youtube.com/watch?v=fWrqkvf7xD4">Vidéo YouTube</a>',
+    formula: null
+  },
+
+  {
+    num: 2,
+    cls: 'qn-s',
+    text: 'Selon le principe d’inertie, si les forces sont égales et opposées, il n’y a pas de mouvement ou...',
+    hint: 'Indice : dans l’espace, un objet peut continuer son mouvement sans moteur. <a href="https://www.youtube.com/watch?v=diTn2j7Ezq0">Vidéo YouTube</a>',
+    formula: null
+  },
+
+  {
+    num: 3,
+    cls: 'qn-s',
+    text: 'Comment évolue le poids en fonction de la masse ? Réalise 3 mesures grâce à la balance, au dynamomètre et aux objets sur ta paillasse.',
+    hint: 'Réalise un graphique représentant le poids en fonction de la masse.',
+    formula: null
+  },
+
+  {
+    num: 4,
+    cls: 'qn-s',
+    text: 'Quelle différence y a-t-il entre le poids et la masse ?',
+    hint: 'Pense aux unités et à la définition de chaque grandeur.',
+    formula: null
+  },
+
+  {
+    num: 5,
+    cls: 'qn-s',
+    text: 'Représente les deux forces qui s’exercent sur un objet suspendu à un dynamomètre.',
+    hint: 'L’objet est immobile : réfléchis à l’origine des vecteurs et à leur direction.',
+    formula: null
+  },
+
+  {
+    num: 6,
+    cls: 'qn-s',
+    text: 'Grâce au graphique, retrouve la relation entre P et m.',
+    hint: 'Pense aux unités, vérifie ta valeur et compare-la à la réalité.',
+    formula: null
+  }
+],
+  seconde: [
+    { num:1, cls:'qn-s', text:'Une barre de 15 kg est posée sur le sol. Calculez son poids en utilisant g = 9,81 N/kg.', answer:'P = m × g = 15 × 9,81 = 147,15 N', formula:'P = 15 × 9.81 = 147.15 N' },
+    { num:2, cls:'qn-s', text:'Décrivez les deux forces vectorielles qui s\'exercent sur cette barre lorsqu\'elle est posée au sol, et expliquez pourquoi elle ne bouge pas.', answer:'Poids P⃗ = 147 N vers le bas ; réaction du sol R⃗ = 147 N vers le haut. Même norme, sens opposés → somme nulle → pas de mouvement (principe d\'inertie).', formula:'P⃗ + R⃗ = 0⃗' },
+    { num:3, cls:'qn-s', text:'Pour soulever la barre, quelle condition doit être vérifiée par la force musculaire exercée ?', answer:'La force musculaire (vers le haut) doit être strictement supérieure au poids P pour créer une résultante non nulle vers le haut et mettre la barre en mouvement.', formula:'F_muscle > P = 147 N' },
+  ],
+  premiere: [
+    { num:1, cls:'qn-p', text:'Un pratiquant soulève une barre de 80 kg sur une hauteur de 0,6 m lors d\'un développé couché. Calculez le travail fourni (g = 10 N/kg).', answer:'F = P = 80 × 10 = 800 N. W = F × d = 800 × 0,6 = 480 J.', formula:'W = 800 × 0.6 = 480 J' },
+    { num:2, cls:'qn-p', text:'Ce pratiquant effectue le mouvement en 1,5 s. Calculez sa puissance développée.', answer:'P = W / t = 480 / 1,5 = 320 W.', formula:'P = 480 / 1.5 = 320 W' },
+    { num:3, cls:'qn-p', text:'Un sportif de haut niveau réalise le même mouvement (480 J) en 0,8 s. Comparez les puissances. Que peut-on conclure ?', answer:'P_sportif = 480 / 0,8 = 600 W vs 320 W. Le sportif est presque 2 fois plus puissant : même travail, deux fois moins de temps.', formula:'P = 480 / 0.8 = 600 W' },
+    { num:4, cls:'qn-p', text:'(Énergie) Décrivez les conversions d\'énergie lors d\'une répétition complète (montée + descente de la barre).', answer:'Montée : énergie chimique (muscles) → énergie cinétique (barre en mouvement) + énergie potentielle de pesanteur (barre en hauteur). Descente contrôlée : énergie potentielle → chaleur (muscles freinateurs) + énergie cinétique partielle.', formula:null },
+  ],
+  terminale: [
+    { num:1, cls:'qn-t', text:'Lors d\'un curl biceps, bras de levier = 0,30 m, haltère 10 kg (g = 10 N/kg), angle = 90°. Calculez le moment de force.', answer:'F = 100 N. M = F × d × sin(90°) = 100 × 0,30 × 1 = 30 N·m.', formula:'M = 100 × 0.30 × 1 = 30 N·m' },
+    { num:2, cls:'qn-t', text:'Même haltère, bras tendu, levier = 0,55 m depuis l\'épaule. Comparez les moments. Lequel est le plus difficile ?', answer:'M_épaule = 100 × 0,55 × 1 = 55 N·m > 30 N·m (coude). Bras tendu = presque le double du moment : l\'exercice est bien plus difficile à masse identique.', formula:'M = 100 × 0.55 × 1 = 55 N·m' },
+    { num:3, cls:'qn-t', text:'À quel angle θ le moment est-il maximal ? À quel angle est-il nul ? Justifiez par la formule.', answer:'M max quand sin(θ) = 1 → θ = 90° (force ⊥ bras de levier). M nul quand sin(θ) = 0 → θ = 0° ou 180° (force parallèle au bras, aucun effet de rotation).', formula:'M_max à θ = 90° · M = 0 à θ = 0°' },
+  ],
+  spe: [
+    { num:1, cls:'qn-sp', text:'(Statistiques) Entre quelles tranches d\'âge la force de préhension médiane est-elle la plus élevée chez les hommes ? Chez les femmes ?', answer:'Hommes : 30–34 ans (49,7 kg) et 35–39 ans (49,5 kg). Femmes : 30–39 ans (29,7 kg). Le pic se situe entre 30 et 39 ans pour les deux sexes.', formula:null },
+    { num:2, cls:'qn-sp', text:'Calculez la diminution relative (%) de la force médiane entre 30–34 ans et 70–74 ans chez les hommes.', answer:'Δ% = (49,7 − 37,7) / 49,7 × 100 ≈ 24 %. La force médiane perd environ un quart de sa valeur entre le pic et 70–74 ans.', formula:'Δ% = (49.7 − 37.7) / 49.7 × 100 ≈ 24%' },
+    { num:3, cls:'qn-sp', text:'Un homme de 1,78 m obtient un grip de 42 kg. Calculez sa valeur normalisée. À quel percentile se situe-t-il à 45–49 ans ?', answer:'G_norm = 42 / 1,78² ≈ 13,3 kg/m². À 45–49 ans : P20 = 39,0 kg, P50 = 47,6 kg. Avec 42 kg il est entre le 20e et le 50e percentile → force dans la norme basse.', formula:'G_norm = 42 / 1.78² ≈ 13.3 kg/m²' },
+    { num:4, cls:'qn-sp', text:'(Esprit critique) L\'étude représente 71 % de la population mondiale mais surtout des pays à IDH très élevé. Identifiez une limite et proposez une amélioration.', answer:'Limite : sous-représentation des pays à IDH faible (Afrique subsaharienne, Asie du Sud) qui peuvent avoir des niveaux de force différents (activité de travail physique, nutrition, accès aux soins). Amélioration : inclure des études terrain dans ces régions et rééquilibrer la pondération géographique.', formula:null },
+  ],
+};
+
+/* ── TABLE ── */
+function buildGripTable() {
+  const tbody = document.getElementById('grip-table-body');
+  gripData.forEach(row => {
+    const h = row.age === '30–34' ? 'highlight' : '';
+    tbody.innerHTML += `<tr>
+      <td class="${h}">${row.age}</td>
+      <td class="male">${row.mP20}</td>
+      <td class="male ${h}">${row.mP50}</td>
+      <td class="male">${row.mP80}</td>
+      <td class="female">${row.fP20}</td>
+      <td class="female ${h}">${row.fP50}</td>
+      <td class="female">${row.fP80}</td>
+    </tr>`;
+  });
+}
+
+/* ── QUESTIONS ── */
+function buildQuestions(level) {
+
+  const cont = document.getElementById('qs-' + level);
+
+  if (!cont || !questions[level]) return;
+
+  cont.innerHTML = questions[level].map((q, index) => `
+
+    <div class="question-block"
+         style="${index > 0 ? 'display:none;' : ''}">
+
+      <div class="q-head"
+           onclick="toggleQ(this, ${index}, '${level}')">
+
+        <div class="q-num ${q.cls}">${q.num}</div>
+
+        <div class="q-text">${q.text}</div>
+
+        <span class="q-arrow">›</span>
+
+      </div>
+
+      <div class="q-answer">
+
+        ${
+          q.answer
+          ? `
+            <strong style="
+              font-size:0.75rem;
+              text-transform:uppercase;
+              letter-spacing:0.06em;
+              color:#999;
+              display:block;
+              margin-bottom:0.4rem;
+            ">
+              Correction
+            </strong>
+            ${q.answer}
+          `
+          : `
+            <strong style="
+              font-size:0.75rem;
+              text-transform:uppercase;
+              letter-spacing:0.06em;
+              color:#999;
+              display:block;
+              margin-bottom:0.4rem;
+            ">
+              Indice
+            </strong>
+            ${q.hint}
+          `
+        }
+
+        ${q.formula
+          ? `<div class="answer-formula">${q.formula}</div>`
+          : ''
+        }
+
+      </div>
+
+    </div>
+
+  `).join('');
+}
+
+function toggleQ(head, index, level) {
+
+  head.classList.toggle('open');
+
+  head.nextElementSibling.classList.toggle('visible');
+
+  // toutes les questions du niveau actuel
+  const allQuestions = document.querySelectorAll(
+    '#qs-' + level + ' .question-block'
+  );
+
+  const next = allQuestions[index + 1];
+
+  if(next && next.style.display === 'none'){
+
+    next.style.display = 'block';
+
+    next.animate(
+      [
+        {
+          opacity:0,
+          transform:'translateY(10px)'
+        },
+        {
+          opacity:1,
+          transform:'translateY(0px)'
+        }
+      ],
+      {
+        duration:400,
+        easing:'ease-out'
+      }
+    );
+  }
+}
+
+/* ── CALCULATORS ── */
+function calcPoids() {
+  const m = +document.getElementById('s-masse').value;
+  const g = +document.getElementById('s-g').value;
+  document.getElementById('v-masse').textContent = m + ' kg';
+  document.getElementById('v-g').textContent = g.toFixed(2);
+  document.getElementById('r-poids').textContent = (Math.round(m * g * 100) / 100).toFixed(2);
+}
+function calcTravail() {
+
+    let F = parseFloat(document.getElementById("p-force").value);
+    let d = parseFloat(document.getElementById("p-dist").value);
+    let angle = parseFloat(document.getElementById("p-angle").value);
+
+    document.getElementById("v-force").innerText = F + " N";
+    document.getElementById("v-dist").innerText = d + " m";
+    document.getElementById("v-angle").innerText = angle + "°";
+
+    let rad = angle * Math.PI / 180;
+
+    let cos = Math.cos(rad);
+    let W = F * d * cos;
+
+    document.getElementById("r-travail").innerText = W.toFixed(2);
+    let sens = (cos >= 0) ? "Travail moteur (positif)" : "Travail résistant (négatif)";
+    document.getElementById("r-travail").innerText =
+        W.toFixed(2) + " J — " + sens;
+    updateVectorVisual(F, angle);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    const F = parseFloat(document.getElementById("p-force").value);
+    const angle = parseFloat(document.getElementById("p-angle").value);
+
+    updateVectorVisual(F, angle);
+});
+
+function updateVectorVisual(F, angle) {
+
+    const canvas = document.getElementById("canvasVec");
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+    let x0 = canvas.width / 2;
+    let y0 = canvas.height / 2;
+
+
+    ctx.strokeStyle = "#2ecc71";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(20, y0);
+    ctx.lineTo(280, y0);
+    ctx.stroke();
+
+  
+    ctx.beginPath();
+    ctx.moveTo(270, y0);
+    ctx.lineTo(280, y0);
+    ctx.lineTo(272, y0 - 6);
+    ctx.moveTo(280, y0);
+    ctx.lineTo(272, y0 + 6);
+    ctx.stroke();
+
+
+let scale = 0.25; // facteur visuel
+let length = F * scale;
+length = Math.min(Math.max(length, 25), 120);
+
+
+    let rad = angle * Math.PI / 180;
+
+    let x1 = x0 + length * Math.cos(rad);
+    let y1 = y0 - length * Math.sin(rad);
+
+    ctx.strokeStyle = "#e74c3c";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+
+
+    ctx.beginPath();
+    ctx.arc(x1, y1, 5, 0, Math.PI * 2);
+    ctx.fillStyle = "#e74c3c";
+    ctx.fill();
+
+    ctx.strokeStyle = "#3498db";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(x0, y0, 30, 0, -rad, true);
+    ctx.stroke();
+
+
+    ctx.fillStyle = "#333";
+    ctx.font = "12px Arial";
+
+    ctx.fillText("Déplacement (d)", 20, y0 - 10);
+    ctx.fillText("Force F", x1 + 5, y1);
+
+}
+function calcPuissance() {
+  const W = +document.getElementById('p-w').value;
+  const t = +document.getElementById('p-t').value;
+  document.getElementById('v-w').textContent = W + ' J';
+  document.getElementById('v-t').textContent = t.toFixed(1) + ' s';
+  document.getElementById('r-puissance').textContent = Math.round(W / t);
+}
+function calcMoment() {
+  const F = +document.getElementById('t-force').value;
+  const d = +document.getElementById('t-levier').value;
+  const theta = +document.getElementById('t-angle').value;
+  document.getElementById('tv-force').textContent = F + ' N';
+  document.getElementById('tv-levier').textContent = d.toFixed(2) + ' m';
+  document.getElementById('tv-angle').textContent = theta + '°';
+  document.getElementById('r-moment').textContent = (F * d * Math.sin(theta * Math.PI / 180)).toFixed(1);
+}
+
+/* ── LEVEL SWITCH ── */
+function switchLevel(level, btn) {
+  document.querySelectorAll('.level-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + level).classList.add('active');
+  btn.classList.add('active');
+  if (level === 'spe') buildGripChart();
+}
+
+/* ── TABS ── */
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'tab-graph') setTimeout(buildGripChart, 60);
+}
+
+/* ── CHART ── */
+let gripChart = null;
+function buildGripChart() {
+  const canvas = document.getElementById('gripCanvas');
+  if (!canvas) return;
+  if (gripChart) { gripChart.destroy(); }
+  gripChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: gripData.map(r => r.age),
+      datasets: [
+        { label:'Hommes (P50)', data: gripData.map(r => r.mP50),
+          borderColor:'#2a7fa8', backgroundColor:'rgba(135,206,235,0.15)',
+          borderWidth:2.5, pointRadius:5, pointBackgroundColor:'#2a7fa8', fill:false, tension:0.35 },
+        { label:'Femmes (P50)', data: gripData.map(r => r.fP50),
+          borderColor:'#a03460', backgroundColor:'rgba(232,121,154,0.12)',
+          borderWidth:2.5, pointRadius:5, pointBackgroundColor:'#e8799a', fill:false, tension:0.35 },
+        { label:'Hommes (P20–P80)', data: gripData.map(r => r.mP80),
+          borderColor:'rgba(42,127,168,0.3)', borderWidth:1, borderDash:[4,3],
+          pointRadius:0, fill:false, tension:0.35 },
+        { label:'Femmes (P20–P80)', data: gripData.map(r => r.fP80),
+          borderColor:'rgba(160,52,96,0.3)', borderWidth:1, borderDash:[4,3],
+          pointRadius:0, fill:false, tension:0.35 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend:{ position:'bottom', labels:{ font:{size:12}, boxWidth:16,
+          filter: item => item.datasetIndex < 2 }},
+        tooltip:{ callbacks:{ label: ctx => ctx.dataset.label + ' : ' + ctx.parsed.y + ' kg' }}
+      },
+      scales: {
+        y:{ title:{display:true, text:'Force (kg)', font:{size:11}}, min:10, max:62,
+            grid:{color:'rgba(0,0,0,0.04)'} },
+        x:{ title:{display:true, text:'Âge (ans)', font:{size:11}}, ticks:{font:{size:10}} }
+      }
+    }
+  });
+}
+
+/* ── INIT ── */
+buildGripTable();
+['primaire','seconde','premiere','terminale','spe'].forEach(buildQuestions);
+</script>
+</body>
+</html>

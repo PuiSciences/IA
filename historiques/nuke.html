@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fusion et Fission nucléaires — PuiSciences</title>
+
+<link rel="stylesheet"
+href="https://unpkg.com/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+
+<style>
+
+:root{
+  --bg:#fafaf8;
+  --card:#ffffff;
+  --text:#222;
+  --blue:#5aa9e6;
+  --red:#e76f51;
+  --green:#5b8e7d;
+  --yellow:#ffd166;
+  --dark:#2d3142;
+  --border:#dcdcdc;
+  --radius:14px;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding:30px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#666;
+  margin-bottom:40px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:25px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.card-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
+  font-weight:700;
+  font-size:1.1rem;
+}
+
+.simulation{
+  position:relative;
+  height:280px;
+  border-radius:12px;
+  background:#f3f6f8;
+  overflow:hidden;
+  border:2px dashed #cfd8dc;
+  margin-bottom:20px;
+}
+
+/* PARTICULES */
+
+.nucleon{
+  position:absolute;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+}
+
+.proton{
+  background:var(--red);
+}
+
+.neutron{
+  background:var(--blue);
+}
+
+/* FUSION */
+
+#fusion-left{
+  position:absolute;
+  left:70px;
+  top:120px;
+  animation:fusionLeft 4s infinite ease-in-out;
+}
+
+#fusion-right{
+  position:absolute;
+  right:70px;
+  top:120px;
+  animation:fusionRight 4s infinite ease-in-out;
+}
+
+#fusion-result{
+  position:absolute;
+  left:50%;
+  top:95px;
+  transform:translateX(-50%) scale(0);
+  animation:fusionResult 4s infinite ease-in-out;
+}
+
+@keyframes fusionLeft{
+  0%{ left:70px; }
+  40%{ left:180px; }
+  100%{ left:180px; }
+}
+
+@keyframes fusionRight{
+  0%{ right:70px; }
+  40%{ right:180px; }
+  100%{ right:180px; }
+}
+
+@keyframes fusionResult{
+  0%,39%{
+    transform:translateX(-50%) scale(0);
+    opacity:0;
+  }
+
+  50%{
+    transform:translateX(-50%) scale(1.2);
+    opacity:1;
+  }
+
+  100%{
+    transform:translateX(-50%) scale(1);
+    opacity:1;
+  }
+}
+
+/* FISSION */
+
+#neutron-shot{
+  position:absolute;
+  left:-30px;
+  top:120px;
+  animation:shoot 5s infinite linear;
+}
+
+#uranium{
+  position:absolute;
+  left:50%;
+  top:100px;
+  transform:translateX(-50%);
+}
+
+.fragment{
+  position:absolute;
+  opacity:0;
+}
+
+#frag1{
+  top:70px;
+  left:50%;
+  animation:explode1 5s infinite;
+}
+
+#frag2{
+  top:150px;
+  left:50%;
+  animation:explode2 5s infinite;
+}
+
+@keyframes shoot{
+  0%{ left:-30px; }
+  40%{ left:230px; }
+  100%{ left:230px; opacity:0; }
+}
+
+@keyframes explode1{
+
+  0%,45%{
+    transform:translateX(0);
+    opacity:0;
+  }
+
+  55%{
+    opacity:1;
+  }
+
+  100%{
+    transform:translateX(-140px);
+    opacity:1;
+  }
+}
+
+@keyframes explode2{
+
+  0%,45%{
+    transform:translateX(0);
+    opacity:0;
+  }
+
+  55%{
+    opacity:1;
+  }
+
+  100%{
+    transform:translateX(140px);
+    opacity:1;
+  }
+}
+
+/* NOYAUX */
+
+.nucleus{
+  position:relative;
+  width:90px;
+  height:90px;
+}
+
+.small-nucleus{
+  width:60px;
+  height:60px;
+}
+
+.counter{
+  background:#f7f7f7;
+  border-radius:10px;
+  padding:12px;
+  margin-top:15px;
+  font-size:0.95rem;
+}
+
+.equation{
+  background:var(--dark);
+  color:white;
+  border-radius:10px;
+  padding:14px;
+  font-family:monospace;
+  margin-top:18px;
+  text-align:center;
+  font-size:1rem;
+}
+
+.questions{
+  margin-top:50px;
+}
+
+.question{
+  background:white;
+  border-radius:10px;
+  border:1px solid var(--border);
+  margin-bottom:14px;
+  overflow:hidden;
+}
+
+.q-head{
+  padding:15px;
+  cursor:pointer;
+  font-weight:600;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.q-body{
+  display:none;
+  padding:15px;
+  background:#f8f8f8;
+}
+
+.q-body.show{
+  display:block;
+}
+
+@media(max-width:900px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Fusion et Fission nucléaires</h1>
+
+<div class="subtitle">
+Observer deux transformations nucléaires :
+fusion et fission.
+</div>
+
+<div class="grid">
+
+  <!-- FUSION -->
+  <div class="card">
+
+    <div class="card-title">
+      <i class="ti ti-bolt"></i>
+      Fusion nucléaire
+    </div>
+
+    <div class="simulation">
+
+      <!-- noyau gauche -->
+      <div id="fusion-left">
+
+        <div class="small-nucleus">
+
+          <div class="nucleon proton" style="left:8px;top:18px;"></div>
+          <div class="nucleon neutron" style="left:28px;top:18px;"></div>
+
+        </div>
+
+      </div>
+
+      <!-- noyau droite -->
+      <div id="fusion-right">
+
+        <div class="small-nucleus">
+
+          <div class="nucleon proton" style="left:8px;top:18px;"></div>
+          <div class="nucleon neutron" style="left:28px;top:18px;"></div>
+
+        </div>
+
+      </div>
+
+      <!-- résultat -->
+      <div id="fusion-result">
+
+        <div class="nucleus">
+
+          <div class="nucleon proton" style="left:18px;top:20px;"></div>
+          <div class="nucleon proton" style="left:45px;top:20px;"></div>
+
+          <div class="nucleon neutron" style="left:18px;top:48px;"></div>
+          <div class="nucleon neutron" style="left:45px;top:48px;"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="equation">
+      ²H + ²H → ⁴He + énergie
+    </div>
+
+    <div class="counter">
+
+      <strong>Compteur de particules :</strong><br><br>
+
+      🔴 Protons : 2 → 2<br>
+      🔵 Neutrons : 2 → 2
+
+    </div>
+
+  </div>
+
+  <!-- FISSION -->
+  <div class="card">
+
+    <div class="card-title">
+      <i class="ti ti-radioactive"></i>
+      Fission nucléaire
+    </div>
+
+    <div class="simulation">
+
+      <!-- neutron -->
+      <div id="neutron-shot">
+
+        <div class="nucleon neutron"></div>
+
+      </div>
+
+      <!-- uranium -->
+      <div id="uranium">
+
+        <div class="nucleus">
+
+          <div class="nucleon proton" style="left:18px;top:18px;"></div>
+          <div class="nucleon proton" style="left:45px;top:18px;"></div>
+
+          <div class="nucleon neutron" style="left:18px;top:48px;"></div>
+          <div class="nucleon neutron" style="left:45px;top:48px;"></div>
+
+          <div class="nucleon proton" style="left:32px;top:33px;"></div>
+
+        </div>
+
+      </div>
+
+      <!-- fragments -->
+      <div id="frag1" class="fragment">
+
+        <div class="small-nucleus">
+
+          <div class="nucleon proton" style="left:8px;top:18px;"></div>
+          <div class="nucleon neutron" style="left:28px;top:18px;"></div>
+
+        </div>
+
+      </div>
+
+      <div id="frag2" class="fragment">
+
+        <div class="small-nucleus">
+
+          <div class="nucleon proton" style="left:8px;top:18px;"></div>
+          <div class="nucleon neutron" style="left:28px;top:18px;"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="equation">
+      ²³⁵U + n → fragments + neutrons + énergie
+    </div>
+
+    <div class="counter">
+
+      <strong>Compteur de particules :</strong><br><br>
+
+      🔴 Protons conservés<br>
+      🔵 Neutrons libérés lors de la fission
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- QUESTIONS -->
+
+<div class="questions">
+
+  <h2 style="margin-bottom:20px;">
+    Questions
+  </h2>
+
+  <div class="question">
+
+    <div class="q-head" onclick="toggleQ(this)">
+      Qu’est-ce que la fusion nucléaire ?
+      <span>+</span>
+    </div>
+
+    <div class="q-body">
+      La fusion nucléaire est une réaction où deux petits noyaux
+      s’assemblent pour former un noyau plus lourd.
+    </div>
+
+  </div>
+
+  <div class="question">
+
+    <div class="q-head" onclick="toggleQ(this)">
+      Qu’est-ce que la fission nucléaire ?
+      <span>+</span>
+    </div>
+
+    <div class="q-body">
+      La fission nucléaire est une réaction où un noyau lourd
+      se casse en plusieurs noyaux plus petits.
+    </div>
+
+  </div>
+
+  <div class="question">
+
+    <div class="q-head" onclick="toggleQ(this)">
+      Quelle réaction produit l’énergie des étoiles ?
+      <span>+</span>
+    </div>
+
+    <div class="q-body">
+      Les étoiles produisent leur énergie grâce à la fusion nucléaire.
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function toggleQ(el){
+
+  const body = el.nextElementSibling;
+
+  body.classList.toggle("show");
+
+}
+
+</script>
+
+</body>
+</html>

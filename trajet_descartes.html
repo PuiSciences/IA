@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loi de Snell-Descartes et temps de trajet — PuiSciences</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+    <style>
+        :root {
+            --ps-vert:      #6fa882;
+            --ps-vert-pale: #d4ebe0;
+            --ps-vert-dark: #3d6b51;
+            --ps-bleu:      #87ceeb;
+            --ps-bleu-pale: #d6f0fb;
+            --ps-bleu-dark: #2a7fa8;
+            --ps-rose:      #e8799a;
+            --ps-rose-pale: #fce0e8;
+            --ps-rose-dark: #a03460;
+            --ps-gris:      #888888;
+            --ps-gris-pale: #f2f2f0;
+            --ps-gris-dark: #444441;
+            --ps-fond:      #fafaf8;
+            --ps-noir:      #2c2c2a;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --font: 'Georgia', serif;
+            --font-sans: system-ui, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--ps-fond);
+            color: var(--ps-noir);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+		
+		.hidden {
+    display: none;
+}
+
+        /* HEADER */
+        .page-header {
+            background: var(--ps-noir);
+            color: #f5f3ec;
+            padding: 1.6rem 2.5rem 1.4rem;
+            border-bottom: 3px solid var(--ps-rose);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        .header-logo {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .header-text .subtitle {
+            font-size: 0.78rem;
+            color: #aaa;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.2rem;
+        }
+        .header-text h1 {
+            font-family: var(--font);
+            font-size: 1.65rem;
+            font-weight: normal;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+        .tagline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            justify-content: center;
+        }
+        .tagline-pill {
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .tp-b { background: var(--ps-bleu-dark); color: #fff; }
+        .tp-v { background: var(--ps-vert);      color: #fff; }
+        .tp-r { background: var(--ps-rose);      color: #fff; }
+
+        /* MAIN */
+        .main-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* FORMULA BOX */
+        .formula-box {
+            background: var(--ps-noir);
+            color: #f5f3ec;
+            border-radius: var(--radius);
+            padding: 0.8rem 1.2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .formula-box .label {
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #aaa;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        /* CALLOUT */
+        .callout {
+            border-left: 3px solid;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 0.75rem 1rem;
+            margin: 0.8rem 0;
+            font-size: 0.88rem;
+        }
+        .callout-b { border-color: var(--ps-bleu); background: var(--ps-bleu-pale); color: var(--ps-bleu-dark); }
+        .callout-v { border-color: var(--ps-vert); background: var(--ps-vert-pale); color: var(--ps-vert-dark); }
+        .callout-r { border-color: var(--ps-rose); background: var(--ps-rose-pale); color: var(--ps-rose-dark); }
+        .callout strong { font-weight: 600; }
+
+        /* CARD */
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0da;
+            border-radius: var(--radius);
+    padding: 0.7rem 1rem;
+	margin-bottom: 1.2rem;
+        }
+        .card-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--ps-gris);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* CONTROLS */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .ctrl-item label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--ps-gris-dark);
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .ctrl-item input[type="range"] {
+            width: 100%;
+            accent-color: var(--ps-vert);
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .ctrl-val {
+            font-family: 'Courier New', monospace;
+            font-size: 0.92rem;
+            color: var(--ps-vert-dark);
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+        /* CANVAS */
+        #myCanvas {
+            border: 1px solid #e0e0da;
+            border-radius: var(--radius);
+            background: linear-gradient(to bottom, var(--ps-bleu-pale) 0%, var(--ps-bleu-pale) 50%, var(--ps-vert-pale) 50%, var(--ps-vert-pale) 100%);
+        }
+        .graph-container {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #e0e0da;
+            border-radius: var(--radius);
+            background: #fff;
+        }
+
+        /* VALUES DISPLAY */
+        .values-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .value-box {
+            background: var(--ps-fond);
+            border: 1px solid #e0e0da;
+            border-radius: var(--radius-sm);
+            padding: 0.7rem 1rem;
+        }
+        .value-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ps-gris);
+            margin-bottom: 0.2rem;
+        }
+        .value-val {
+            font-family: var(--font);
+            font-size: 1.2rem;
+            font-weight: normal;
+            color: var(--ps-noir);
+        }
+
+        /* QUESTIONS */
+        .question-block {
+            background: #fff;
+            border: 1px solid #e0e0da;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+        .q-head {
+            padding: 0.9rem 1.1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .q-num {
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+            color: #fff;
+            background: var(--ps-bleu-dark);
+        }
+        .q-text {
+            font-size: 0.92rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+        .q-arrow {
+            color: #ccc;
+            font-size: 1rem;
+            transition: transform 0.2s;
+            margin-top: 4px;
+        }
+        .q-head.open .q-arrow {
+            transform: rotate(90deg);
+        }
+        .q-answer {
+            display: none;
+            background: var(--ps-gris-pale);
+            padding: 0.9rem 1.1rem 0.9rem 3.1rem;
+            font-size: 0.88rem;
+            color: #444;
+            border-top: 1px solid #e0e0da;
+        }
+        .q-answer.visible {
+            display: block;
+        }
+        .q-answer .answer-formula {
+            font-family: 'Courier New', monospace;
+            background: #fff;
+            border: 1px solid #e0e0da;
+            border-radius: var(--radius-sm);
+            padding: 0.4rem 0.7rem;
+            margin-top: 0.4rem;
+            font-size: 0.92rem;
+            display: inline-block;
+        }
+
+        /* FOOTER */
+        .page-footer {
+            text-align: center;
+            padding: 1.5rem 0 0;
+            border-top: 1px solid #e0e0da;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        .page-footer a {
+            color: var(--ps-bleu-dark);
+        }
+		
+    .question-block-fermat {
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+    .q-head-fermat {
+        padding: 0.9rem 1.1rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        cursor: pointer;
+        user-select: none;
+    }
+    .q-num-fermat {
+        min-width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 0.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        color: #fff;
+        background: var(--ps-bleu-dark);
+    }
+    .q-text-fermat {
+        font-size: 0.92rem;
+        line-height: 1.5;
+        flex: 1;
+    }
+    .q-arrow-fermat {
+        color: #ccc;
+        font-size: 1rem;
+        transition: transform 0.2s;
+        margin-top: 4px;
+    }
+    .q-head-fermat.open .q-arrow-fermat {
+        transform: rotate(90deg);
+    }
+    .q-answer-fermat {
+        display: none;
+        background: var(--ps-gris-pale);
+        padding: 0.9rem 1.1rem 0.9rem 3.1rem;
+        font-size: 0.88rem;
+        color: #444;
+        border-top: 1px solid #e0e0da;
+    }
+    .q-answer-fermat.visible {
+        display: block;
+    }
+    .q-answer-fermat .answer-formula {
+        font-family: 'Courier New', monospace;
+        background: #fff;
+        border: 1px solid #e0e0da;
+        border-radius: var(--radius-sm);
+        padding: 0.4rem 0.7rem;
+        margin-top: 0.4rem;
+        font-size: 0.92rem;
+        display: inline-block;
+    }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+    <div class="header-logo">
+        <canvas id="logo-canvas"></canvas>
+        <script>
+            (function(){
+                var img = new Image();
+                img.src = 'data:image/bmp;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAA5NAAAOTQFG1WgJAAAVN0lEQVR4nOSd13MbWXaH98H2i8t2Odtrex3WYbfKD7tP67LL/gdcDk/Oa9e82js5J2kURjmPRqOskURSiRIpKlAiJVKjTIqUREWKYs45BxBA3/b5IDTZ3QSIRgcAM4OqUyRB4Hbf8+t78j33O7qufyeXafv27b++devWvxZ6acuWLavlZ7G8V/P555/Xy8/2bdu2jcl7sxC/8178fzXy+aL4d15iDMbK9nxSUdZvwE7C1N8X5v1UGHngs88+65KfGiTMnM3Pz58uLS2NXr9+XauqqtLu3r2rPXz4UGtoaIgRv/Me/+MzfDYvL2+a7xrjyJid8bH/a9OmTb+X7fnmJCCbN2/+odAqYVJznGnhkydPzlZXV2sdHR3a5OSkJp/zRIzBWIxZWFg4yzXiQDfJtVfK3z/4VgOyYcOG35DV8DNhxF0Ys3fv3pmbN29qnZ2dWjQa9QxAKuIaAHTjxg2uHYqDc4974t6+NYCIOPqeTF5+bJ3esWPH7IULF6JtbW2BA5CK+vr6tCtXrkTlnkJybyFZNYcEnO9/YwGRSf6Z0D6U7759+0LI+0yshHSJe3rw4EFs1cSNhf3c+zcGkPXr1/+irIg1MqmIAQSvbDM+FSmlYobCl19+OSP3HpUVs2vNmjW/8rUGRJb8v4uO6Nu5c2fo6dOnsUlmm9FugHny5InGHJiLgPNvXztA5Gn6I7n5Sp6sysrKaCgUyjpjvRJzqKioiDInmdsVMQD+8GsBiNzwP8nKGD18+HAIRZltRvpNzIm5MUcB5h9zFpBPPvnk5/CKhaJiOUXklXJyDd3t6vBXperk7Ssq24xOV/FjkWEqo1tk7r+QU4BIqOJ35GmpxYxFEaaaUFNvp9pdXqx/fHR3jPZXnPlaAWIQc2XO8TDNb+cEINjqAkYr1sjo6OiiExiaGNPyr11UBhAGHb1R/rUEBGLOMndEWIsffotXffGXchO9BQUFoenp6aQ3HQrPahfvV6llx/dZgPgmAGIo/GPHjhHcHBD6cVYAkSX6d3LxiaKiotlk+kK4rN1raVBri/MSAmHQpye/1MPR1DonlfgQ0amampqyAko4HNaEF2F4IkHLv80oIDwFXPj8+fORZE5e51C/tuPiqQXMX3Jsj37kerlaYnu/rvW5p1UyOzurCSP0l19+WRdFq4sDmvFVxwueCG/G5R5+lBFAkJNC/RKNDScKffCkl9VVqaXCeDsY2y8U6u2DL0zhk7crLbpk2/njsqQ0zxHdlStXxkDJFjC84itlaOPGjX8eKCBykd8UBd545MiREEvUfjMt/d3alnPHFgCx/MR+veJhjYqaVtPU7Iy2pviw5XO1zfWemTcyMqItWbJkDhSIlQMwmYoUIMJFp+DZt2KBBgIItjamLRbFzMyM5QamQjNaoe2JNwg/Y3RqIuGNI6bMn11fku9Zl0Dd3d3au+++awEFkliULgmsjAADj+CV8OxOOn5KOkp8Kza33bR93NGi1hQdWgDE6lOH9PsO9MLBK+ctoLCS/GBIS0uL9uabby4ABVq9erUuWUUVdJATXsEzsUY3+gqIiKq/xwOvr6+fX5aiP87UXFfJzNiJmeRmsJmGJ8c1RJrx3WUn9umD44v7M05oampKe++99xICYgYm6BWD9QfvZKX8sy+AiGL6AwFkhCChcREmgCiyA/HJ8b36rYZHaT/h15/WWcZi1XhlxIkTJ9RiYJhp2bJlumQOA1sxBCUpwBBQ/tgzIERtCabZLSpEkh2QFYUH9ImZqbRvGOvKbiI/am9SXnTIq6++6ggMM4msDwQYeBcPSFZ4AkRk338Qbu7p6VlwkbvNzxKatiV3rrliZPfwgLb02N55BX86X8fDdzOWTNzx6khE69at04eHh32PEsdD9//qChCZ1C8TFjGLqkTR2pWyKsyAwNT+sRFXN33h3m2L6Cquvpo2uOgENyC8/fbb+iuvvDL3N/pH5L8KQHT1L5Z5TAqIOFXbyJKlSi71jAxqditr3+UzuhtFKTEYbdOZI/NevVCjRIadfh/faOnSpa5Wxeuvv67zXX4a7yH2JMzuGyjwEp6Kkt+UFiB4mPKlCGlXJxfqkDAJ1pEZlKrnj11NpLGn0xJW2SgAzUYWOqGJ6Ny5c55EFSvko48+0u0+jDjCyq+CjMePHyO6Iskiw8l8jv2E09N5ymub6i3iZqUEDEen3BW4FVV9ZRkL89rJ906dOuUJEIPeeecd/eOPP7aIMOGJPj4+7hkQeHrw4EEKJ/Y4AgQzl/IXp6vDTEdvXLIw8pCYxm5uekaUOV57uqKL165du3wB5bXXXtMJwbzxxhtz7/F3e3u7Z1AomhAehxPl5RNZVtulXGfGjelHCGXdaWuo3Ym3nojqu9os4G5yKLrQI16tLDN98MEH+vvvvz/3NwDh5XsBhFe8WnLrooDEyztnqJ1ye7FnYnmZdcBqUfiTDr12Ox2/edkCytlaZ6KLUDwixi9QAMSsVxBlp0+f9uThU4wHr+1lq3ZT92fEXrwqsGtNLWq56BCvGUH7igPop52tjsZipezZs8eXlQIYK1asiIkx8/tffPGFWixTmioiHI9z/V9SQCh8vnTpUlK/wymForp2vm1abb14Zo6ZD1163nara9Wpg3qy6LGdeKUTQllMbN27d0+h1IU/CnCM//F7b2+vKz6Vl5dHKZBICAhbAihrofrcKyAxRo5p6kjjrJ5XXRMTO/gqk/LEuxmr9N4tZfdzxFxx/H2YieXkFhCR98peY4ZyxxwmovzWW2/pdXV1aT9w8Dq+/eIHiQBZxZYAP8AwqKwzog49D+unG0f0dWdP6OgEN+NEtKjEuk5ajAWqV8anncfN+vv7NUIi6YIBs8XDVmNjYwnHRWRdvXpVkZ2054mcEDwXUFYsAITNMuzP8BOQ0VmJCjeGdUBhtRTWNajnIoLcjDUmPo3dgqM4gkix06QWL4KHZqspFZWWlioJH6lEGVI/iP0pZGEtgLC1y09xZaaq/mhslRh0ti2kRyS862YsApArCudzJwYBVHXjE0uKOFWuRGoClDlMkog+/PBDnXAHeiMIMAzRB++N7XWG7/FTtngFsV8DBX+seR4QqG4w6nqCHVIkYV8pBhHsTGcslLSUvVqUtJmuXXsRuS4uLg4MEHgO74mszwHCJkh5YkJBXfTxiGZZJQVNYX064t6GH5uejEUFKClKBgjyPB0/gRQDAOTn5ythjo5zaTjHYt7GVkpQ/CksLMRJ3DsHCLtd2QwZ1AWlYk4rao1YVsltEWVex+0dGdIKrpXNmcVmQLq6upQ4uJiknhJO6A6qVhBzQfGHXcOCQUcMEDxFZBgbIIO6INQ4bl0l+aLsp6P+jN0luuXw1QvKDojkRsiZUwKki5Xl+gEIurbLpEd+DXP3b/jDj63Hi5FKsEruDXlfJWYy+yZmQCDxE/REn8sFmpiYiAEiYvKvUOgvsbE+Exd+Ls6iGZCTLZE5JvlNdkDu378/dy0ymvsrzqr+MX/TtF5IRBbF2v/NCllDh4RMXBRdcsq2SgZmgnla7YCIt24BxKiSOXf3pnKaAAuSpAhiWlbJpwQUT9OCIlMXfjhsXSX3fRZb6QBiLqigSj+bgEiRNvsXT9HcpUbMvYxdGHPXDMjlrkggjBAn1zEgBh2oPKcGXBZoeCUJv9BJ4jaA1GN2ZfLiJW3zYuu4OI25AohVjHmvMU6Hbt++DSBPYj4IHXQyefHL3S+CjgbJ1DMMyHBSQOYylGeP6GQtM8WT2tramC8CIKOPHj3K7NNgi2+Nh/1X7F4BMShP/Bvqj4PmCVlawWIYs9fRzllfn4ZBKyD9AVhafgESq6CRYsCBlk6N6GVQPHn27BmFD6GsAIJDaAakZ1rcxhwFZENJgd7a36NNXHuiBnaX66HmXhUoINkQWXVDVtO3eyqzgPSNOgOEWoDp2RdBRQDpXVesQyMnb6vo2FQwIisbSv2RzRfpzDFAEFF3Gp9a7skMCNS3+Yw+cf2p8kuMzSn1bJi9D2yAdOUQIDvLihJuGLIDYtDAnnJ9tqVP+Wb2ZtoxTKRD+jKs1BMBQggf/yNZ1jEZIBYxNu6uJMjiGGY6dJLIyhoKZReQtcWHU2YbUwHiVYzNhU4yGVw0qDrLfogZEKpX2KKdajwngBg0eKBCD3cMugsuZjL8btCtPisgXtK5bgFh+8TNZw9RXo7GSweQgZ1lerhryF34nY7PmUhQmel6rxUQCX5nFJARqaXqGkkviOgUkJHiKqXNhF0lqIR+EmvlnYkUrpm+6rECQp4ko4BIvRiVME+l+MKvFdK3qUSfqnFXLmukcKXW91eNIofOIIsc7FTRPQ9InuTWg7iGPGCLAjJXJ9Ye0fumlSdABvde0iP91spGqlTY0UVhnsMih/aMlQHZ6ZLkQAyGHG3KLiAGVUgEenIRXZYMkNFztUpKJxdUqtDGo6ioSDU3N8fKTRe7VykIt5YBUSgnCiWQQrlEdLEzEnhePV1AYvVijS8ymJLDTAlI35az+szjDpWsuJua4AMHDii2MLCdIZmOhufw3lIoJ8vlu5nUI+c75gEhWZUrgBhEdUzHpDV6YAZk6GClHh2eXFAFSXnq8ePHFY0LaKZ28OBBdevWrVjJarL9iQlLSeOgNFL4m+mM4YWO3APEoHIRrRSMmwEZv/RggePHji36dF28eDFWyM3KoHKSXVZ0hxD9nFSPcKyG8L7BwMG88/bTPXv2+LodIRkhpoLOqfsBiGF0VA9E1didJjVT37XgXgGDQrpVq1bphw4dUuLgKZ56KuYBYmhoKOV2BHHOly8AJL43PZAKeDuZi6+vigmcaUBG0wAktopF503ZFD77RagBZmUAAPsOxWxVT548Ubx38+bNlPNCRSTdsAPRoMyPLW2piDJSY7J47bkMCKsjkZ/EBp2SkpK5jZ8UarP1jZZPTndTLbqlzbzp00lXai8lpeYJE2jMRUCohlksLUDbDWMVcP4JIsrNpk9ZIf+bcls0W3aDAoQwiXniZA9zDRC24k1HFnaHY0sc4gi9gOJm3yKWFQ0FJMGU1jzgMYfa2A8qS9h0xm3jACeELDZPnvBFrgByOO6HqIXMU+x7h/lYTevXr9dx9hBZBQUFqrW11VXjAOH1lkBbazihMRsz2K2bC4Bg+SVLlOFT4NyxR0RKVDW6OeCFe2xAgzP4vZSAQBxNlG7zGadEMsrMiNaJ7ANSKbE1tt6Zv08ljkgKxZY3xBUKm+3R/A9nj1Xj5r7gqYg7QiW7E/E+ISDiNf4pLYRokuI3o3qnrcxon8weIFh7hsiki6kROpKSHEUsymj3RFM0eaoVpi1hET/aM4m4+hPHgEDINycNzNIlKkzMgNhDFEEBApkBKZZogZE6Rkmz49YIHbHPEKWNEr9z505sWzT+mYhxT9vjjAZmi7WNTQrI2rVrf0n8kp7FWvy5oTZZEUFXnCQDxBDBWHr2emI2fdKdlOgsjQJYGeInxMCgqVkqj9sJXb582X2LP4gDsJI1wXRL7TZAgqhaTAWIPfQB01HW8gAq2vwRCMR6YtWgR/wAw2iCKfQvi/F8UUAgWpsmahPrmlE2QNApfow7PRbSxkfmqwklnGHZ9CmKWSUSISIJdDFgVH19fUx5Exzcv3+/rw8JvJM4l/c2seZGynTUDAIQrzVZMlet6Vqj6tx8Tu96Ol93awDCT+NhIgJ75syZWIicv8nmLV9OXO/Fd+jqI2W1ivCHn9ug46Jq1JdGyslajbsldIZfOqTjUbdq3VE2lzQyAyIiQlE8YD41AR1BD62ampoYSERjCYE0NjbGFDtOHz/9dIqNVuOcXueE144AgWTQzYma8Xv1Q1pc+CGD3WNaw+EbC9KpZkDshE7AjyBKW1ZWFvudsDl6w+j6I7kJX0UVDwElVr4344c4coHIZKLjKryETqjzdfxd0RMNRbV6z/rTC8Do3liiD7RbS3uwmOSeY6uB7B2rATLSqnQeRdEjqvw27wmt4ACKdKnetWvXz/sOiJMDXZwQoWxz+L2qtjslIBEpImiqfKa6Np1NWPXRcOKOPmFLqUL4DnjVNK1kZdBGFlOWVY5lha7wEwRzJPfo0aOxk9vSPU4vLUAgPMzFjjxyQqWSts17FtJrjr942kd6E+ebpW+Z1nqrWbV9diEhEE0Hri5YFWbi6UdP4GEjnmAU+gPHD2sq3aBgGkceUYU46OaU6bQBiYPyo1SHgi1Gda0TqmFXxRxjW78os4ASnokIEE0WhW2mlh3leufDhelUM5EwIoMXjx0permzMtAltObzqgtz5lAwgzgazjg2L13xNTk8rfVsKLEwmZXSvLtCwCnX7f8zqGNrqd5yo0mxcpKNDaNx9tAf6AsUOPIcC4ouon6DkODYvPGMH5tnPliS8EqqgyUTUeuNRsfFy+3bSvXmqw0qHFooInkRecV/QITCeEQS/6MKBAVO4JCsHt54EGBg5IjOQEz1Z+1gSbNOoV8j4XrMvHQm0nanNebQJQOieW+l3lrdoiJhLWljS5JFRjtwFDXBQH5HkeN9UxMlYiSwlcGcsabgQbIIbkYBgbAkOI0MmzvdHb2hyVmt6coz9Vz8iuZ9V/TnBbf0ZrGohrsSdwE1iEoPfAdKb+LVf0oiqTHGoycAhRauQa0KY+csc8a0lQfjt/zgpS+AGMd3yxOylACa0+O7vRAvOr2ROCJXgdVk9GQHIKwpKggDPr4b2ppzx3ebiUPfidsQTHPb8dkpEeYwGiTTOzfIaxnEnOKBwhGhf/Cbf74DAnEMA5FNVgtBySAbSJLBM3IXQQLBHAgSMieZX0WioyZyFhCDOACLc6zIkpG6DOq8QHQGeYsgxmdM7l3mMCvz6UuVz8hpQIzDxThziTwy1gh5+iCOpfMbDF7cq9wzp+FEmANZ1KD5FTggJmC+zzE/lBhRYEyhWNCK3w1xT9wbdVPcK/fshzmbc4CYTWShNfGqvVmxyKI4bdkGghQrlpOEWwCCIrZdJOcyzZ+MA2IuW+UwE0L6VICzatifQuVHJnZycQ18GfZnSNKKOil8ilpqbe3lnd8KQMxEOb48kSsJ7cf714Zpv81mSJhmzvy5JQoXGIsx2dPHNeJbARrYnyG//0W2+ZAzgNjA+a4w6z+pnqQ7Tnz/Nk9vOC8vb5oWFPQFoVkLHXRoa0R0AOJ33uN/fIbP8h2+a4zDblfGZk+fAPG72Z5vzgNiJ9pv0/FZGPg/HDpDPxBhcBWdc4Ta6fcVV76YpaO8F/9fFZ9lZxjfZQz2gWd7Pqno/wEAAP//OrJMQwAAAAZJREFUAwDfoKVyfFbHfQAAAABJRU5ErkJggg==';
+                img.onload = function() {
+                    var a = document.getElementById('logo-canvas');
+                    a.width = 68;
+                    a.height = 68;
+                    a.getContext('2d').drawImage(img, 0, 0, 100, 100, 0, 0, 68, 68);
+                };
+            })();
+        </script>
+    </div>
+    <div class="header-text">
+        <div class="subtitle">Physique-chimie &nbsp;·&nbsp; Optique</div>
+        <h1>Loi de Snell-Descartes et temps de trajet</h1>
+        <div class="tagline">
+            <span class="tagline-pill tp-b">Principe de Fermat</span>
+            <span class="tagline-pill tp-v">Temps minimal</span>
+            <span class="tagline-pill tp-r">Réfraction</span>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+
+    <!-- Paramètres -->
+    <div class="card">
+        <div class="card-title"><i class="ti ti-adjustments-horizontal"></i> Paramètres</div>
+        <div class="controls">
+            <div class="ctrl-item">
+                <label>Position de I (x) :</label>
+                <input type="range" id="xSlider" min="0" max="13" step="0.1" value="5">
+                <div class="ctrl-val"><span id="xValue">5</span> m</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Affichage des valeurs -->
+    <div class="values-display">
+        <div class="value-box">
+            <div class="value-label">Distance AI</div>
+            <div class="value-val"><span id="distanceAI">0</span> m</div>
+        </div>
+        <div class="value-box">
+            <div class="value-label">Distance IB</div>
+            <div class="value-val"><span id="distanceIB">0</span> m</div>
+        </div>
+        <div class="value-box">
+            <div class="value-label">Temps de trajet</div>
+            <div class="value-val"><span id="timeValue">0</span> ns</div>
+        </div>
+        <div class="value-box">
+            <div class="value-label">n₁·sin(i₁)</div>
+            <div class="value-val"><span id="n1sini1">0</span></div>
+        </div>
+        <div class="value-box">
+            <div class="value-label">n₂·sin(i₂)</div>
+            <div class="value-val"><span id="n2sini2">0</span></div>
+        </div>
+    </div>
+
+
+
+    <!-- Schéma et graphique -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+        <div class="card">
+            <div class="card-title"><i class="ti ti-vector-triangle"></i> Schéma optique</div>
+            <canvas id="myCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="card">
+            <div class="card-title"><i class="ti ti-chart-line"></i> Temps de trajet en fonction de x</div>
+            <div class="graph-container">
+                <canvas id="graphCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+	
+	    <div class="callout callout-v">
+        <strong>Indices de réfraction :</strong> Couche du haut (air) : n₁ = 1 et Couche du bas (eau) : n₂ = 1,33
+    </div>
+	    <div class="callout callout-b">
+        Idée de présentation de <a href="https://www.lemeilleurprof.xyz/accueil" target="_blank" style="color: var(--ps-bleu-dark);">Pierre Schmitt</a>.        <strong>Principe de Fermat :</strong> La lumière emprunte toujours le trajet qui minimise le temps de parcours.
+
+    </div>
+
+    <!-- Questions -->
+    <div class="card" style="margin-top: 2rem;">
+        <div class="card-title"><i class="ti ti-help-circle"></i> Questions — Principe de Fermat et Snell-Descartes (Seconde)</div>
+        <div class="callout callout-b" style="margin-bottom: 1rem;">
+            <strong>Objectifs :</strong> Comprendre le principe de Fermat, appliquer la loi de Snell-Descartes, et analyser le temps de trajet de la lumière.
+        </div>
+        <div id="qs-snell-fermat"></div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="main-wrap" style="padding-top:0; padding-bottom:1rem;">
+    <div class="page-footer">
+        <a href="https://bio.link/puisciences">PuiSciences</a> · Gontier Adrien ·
+        <a href="https://play.google.com/store/apps/details?id=com.adriengontier.puisciences_college_light">Application Android</a>
+    </div>
+</div>
+
+<!-- Script pour les questions -->
+<script>
+    const questionsSnellFermat = [
+        {
+            num: 1,
+            text: "Énoncez le principe de Fermat.",
+            answer: "Le principe de Fermat stipule que la lumière emprunte toujours le trajet qui minimise le temps de parcours entre deux points.",
+            formula: null
+        },
+        {
+            num: 2,
+            text: "Quelle est la relation entre le principe de Fermat et la loi de Snell-Descartes ?",
+            answer: "La loi de Snell-Descartes peut être déduite du principe de Fermat : le trajet qui minimise le temps de parcours entre deux points via une surface de séparation est celui qui vérifie n₁·sin(i₁) = n₂·sin(i₂).",
+            formula: "n₁ · sin(i₁) = n₂ · sin(i₂)"
+        },
+        {
+            num: 3,
+            text: "Pourquoi la lumière change-t-elle de direction en passant d'un milieu à un autre ?",
+            answer: "La lumière change de direction car sa vitesse change en passant d'un milieu à un autre (v = c/n). Pour minimiser le temps de parcours, le trajet est dévié selon la loi de Snell-Descartes.",
+            formula: null
+        },
+        {
+            num: 4,
+            text: "Dans le schéma, que représente le point I ?",
+            answer: "Le point I représente le point où la lumière passe d'un milieu à un autre (ici, de l'air à l'eau). C'est à cet endroit que la réfraction se produit.",
+            formula: null
+        },
+        {
+            num: 5,
+            text: "Calculez le temps de trajet pour x = 5 m (utilisez les valeurs affichées dans la simulation).",
+            answer: "Le temps de trajet dépend des distances AI et IB, ainsi que des vitesses dans chaque milieu. Utilisez la formule t = (AI / v₁) + (IB / v₂), où v₁ = c / n₁ et v₂ = c / n₂. Les valeurs exactes sont affichées dans la simulation.",
+            formula: "t = (AI / v₁) + (IB / v₂)"
+        },
+        {
+            num: 6,
+            text: "Pourquoi le temps de trajet est-il minimal pour une certaine position de I ?",
+            answer: "Le temps de trajet est minimal pour la position de I qui vérifie la loi de Snell-Descartes (n₁·sin(i₁) = n₂·sin(i₂)). C'est une conséquence directe du principe de Fermat.",
+            formula: null
+        },
+        {
+            num: 7,
+            text: "Un rayon lumineux passe de l'air (n₁ = 1) dans l'eau (n₂ = 1,33) avec un angle d'incidence de 30°. Calculez l'angle de réfraction i₂.",
+            answer: "On applique la loi de Snell-Descartes : 1·sin(30°) = 1,33·sin(i₂) → sin(i₂) = sin(30°)/1,33 ≈ 0,3759 → i₂ ≈ arcsin(0,3759) ≈ 22,1°.",
+            formula: "i₂ = arcsin(sin(30°) / 1.33) ≈ 22.1°"
+        },
+        {
+            num: 8,
+            text: "Expliquez pourquoi la courbe du temps de trajet en fonction de x a la forme d'une parabole.",
+            answer: "La courbe du temps de trajet en fonction de x est une parabole car le temps t(x) est une fonction quadratique de x (due aux termes √(x² + d²) et √((L-x)² + d²) dans les distances AI et IB).",
+            formula: null
+        }
+    ];
+
+    // Fonction pour afficher les questions
+  
+function buildQuestionsSnellFermat() {
+  const cont = document.getElementById('qs-snell-fermat');
+
+  cont.innerHTML = questionsSnellFermat.map((q, index) => `
+    <div class="question-block ${index > 0 ? 'hidden' : ''}">
+      <div class="q-head" onclick="toggleQ(this)">
+        <div class="q-num">${q.num}</div>
+        <div class="q-text">${q.text}</div>
+        <span class="q-arrow">›</span>
+      </div>
+
+      <div class="q-answer">
+        <strong>Correction</strong><br>
+        ${q.answer}
+        ${q.formula ? `<div class="answer-formula">${q.formula}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+    // Fonction pour dérouler une question
+
+
+function toggleQ(head) {
+    const block = head.parentElement;
+    const answer = block.querySelector('.q-answer');
+
+    // ouvrir / fermer la réponse
+    head.classList.toggle('open');
+    answer.classList.toggle('visible');
+
+    // débloquer la question suivante uniquement si réponse ouverte
+    if (answer.classList.contains('visible')) {
+        const next = block.nextElementSibling;
+
+        if (next && next.classList.contains('hidden')) {
+            next.classList.remove('hidden');
+
+            next.animate(
+                [
+                    { opacity: 0, transform: 'translateY(10px)' },
+                    { opacity: 1, transform: 'translateY(0)' }
+                ],
+                {
+                    duration: 350,
+                    easing: 'ease-out'
+                }
+            );
+        }
+    }
+}
+
+function toggleQuestionSnellFermat(block) {
+
+  const head = block.querySelector('.q-head-snell');
+  const answer = block.querySelector('.q-answer-snell');
+
+  // ouvrir / fermer réponse
+  head.classList.toggle('open');
+  answer.classList.toggle('visible');
+
+  // débloquer la suivante
+  const next = block.nextElementSibling;
+
+  if (next && next.classList.contains('hidden')) {
+    next.classList.remove('hidden');
+
+    next.animate(
+      [
+        { opacity: 0, transform: 'translateY(10px)' },
+        { opacity: 1, transform: 'translateY(0)' }
+      ],
+      {
+        duration: 350,
+        easing: 'ease-out'
+      }
+    );
+  }
+}
+
+
+
+    // Initialisation des questions au chargement
+window.addEventListener('DOMContentLoaded', () => {
+  buildQuestionsSnellFermat();
+
+  drawCanvas(xSlider.value);
+  calculateTime(xSlider.value);
+  initializeGraph();
+  updateGraph(xSlider.value);
+});
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    const xSlider = document.getElementById('xSlider');
+    const xValue = document.getElementById('xValue');
+    const timeValue = document.getElementById('timeValue');
+    const distanceAIValue = document.getElementById('distanceAI');
+    const distanceIBValue = document.getElementById('distanceIB');
+    const n1sini1Value = document.getElementById('n1sini1');
+    const n2sini2Value = document.getElementById('n2sini2');
+
+    // Paramètres
+    const d = 4; // Distance verticale entre A et la ligne de séparation (en mètres)
+    const L = 10; // Distance horizontale totale entre A et B (en mètres)
+    const n1 = 1; // Indice de réfraction de la couche du haut (air)
+    const n2 = 1.33; // Indice de réfraction de la couche du bas (eau)
+    const v1 = 3e8; // Vitesse dans la couche du haut (air, en m/s)
+    const v2 = v1 / n2; // Vitesse dans la couche du bas (eau, en m/s)
+
+    // Graphique
+    const graphCanvas = document.getElementById('graphCanvas');
+    let graph;
+const graphData = {
+    labels: Array.from({ length: 131 }, (_, i) => (i / 10).toFixed(1)),
+    data: Array.from({ length: 131 }, (_, i) => {
+        const x = i / 10;
+        return calculateTime(x, false);
+    })
+};
+
+    function initializeGraph() {
+        graph = new Chart(graphCanvas, {
+            type: 'line',
+            data: {
+                labels: graphData.labels,
+                datasets: [{
+                    label: 'Temps de trajet (t) en ns',
+                    data: graphData.data.map(t => t * 1e9), // Conversion en nanosecondes
+                    borderColor: 'rgba(42, 127, 168, 1)',
+                    backgroundColor: 'rgba(42, 127, 168, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Temps (ns)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Position de I (x) en m'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 0
+                }
+            }
+        });
+    }
+
+    // Mise à jour de la position de I
+xSlider.addEventListener('input', function() {
+    const x = parseFloat(this.value);
+
+    xValue.textContent = x;
+
+    drawCanvas(x);
+
+    calculateTime(x);
+
+    updateGraph(x);
+});
+
+    // Dessin du canvas principal
+   function getCSS(varName) {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
+function drawCanvas(x) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // couleurs CSS (fix canvas)
+    const bleuPale = getCSS('--ps-bleu-pale');
+    const vertPale = getCSS('--ps-vert-pale');
+    const roseDark = getCSS('--ps-rose-dark');
+    const bleuDark = getCSS('--ps-bleu-dark');
+    const gris = getCSS('--ps-gris');
+    const noir = getCSS('--ps-noir');
+
+    // fond
+    ctx.fillStyle = bleuPale;
+    ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+
+    ctx.fillStyle = vertPale;
+    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+
+    const A = { x: 20, y: 100 };
+    const B = { x: canvas.width - 20, y: canvas.height - 100 };
+    const I = { x: (x / L) * canvas.width, y: canvas.height / 2 };
+
+    // ligne séparation
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height / 2);
+    ctx.lineTo(canvas.width, canvas.height / 2);
+    ctx.strokeStyle = gris;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // A
+    ctx.fillStyle = roseDark;
+    ctx.beginPath();
+    ctx.arc(A.x, A.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = noir;
+    ctx.fillText('A', A.x + 10, A.y - 10);
+
+    // B
+    ctx.fillStyle = roseDark;
+    ctx.beginPath();
+    ctx.arc(B.x, B.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = noir;
+    ctx.fillText('B', B.x + 10, B.y + 20);
+
+    // I
+    ctx.fillStyle = bleuDark;
+    ctx.beginPath();
+    ctx.arc(I.x, I.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = noir;
+    ctx.fillText('I', I.x + 10, I.y + 20);
+
+    // AI
+    ctx.beginPath();
+    ctx.moveTo(A.x, A.y);
+    ctx.lineTo(I.x, I.y);
+    ctx.strokeStyle = roseDark;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // IB
+    ctx.beginPath();
+    ctx.moveTo(I.x, I.y);
+    ctx.lineTo(B.x, B.y);
+    ctx.strokeStyle = bleuDark;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
+    // Calcul du temps de trajet et des valeurs de Snell-Descartes
+function calculateTime(x, updateDisplay = true) {
+    const distanceAI = Math.sqrt(x * x + d * d);
+    const distanceIB = Math.sqrt((L - x) * (L - x) + d * d);
+
+    const timeAI = distanceAI / v1;
+    const timeIB = distanceIB / v2;
+
+    const totalTime = timeAI + timeIB;
+
+    // Mise à jour affichage UNIQUEMENT si demandé
+    if (updateDisplay) {
+
+        distanceAIValue.textContent = distanceAI.toFixed(2);
+        distanceIBValue.textContent = distanceIB.toFixed(2);
+        timeValue.textContent = (totalTime * 1e9).toFixed(2);
+
+        const i1 = Math.atan2(x, d);
+        const i2 = Math.atan2(L - x, d);
+
+        const n1sini1 = n1 * Math.sin(i1);
+        const n2sini2 = n2 * Math.sin(i2);
+
+        n1sini1Value.textContent = n1sini1.toFixed(4);
+        n2sini2Value.textContent = n2sini2.toFixed(4);
+    }
+
+    return totalTime;
+}
+
+    // Mise à jour du graphique
+    function updateGraph(x) {
+        const index = Math.round(x * 10);
+        graph.data.datasets[0].pointBackgroundColor = Array(graphData.labels.length).fill('transparent');
+        graph.data.datasets[0].pointRadius = Array(graphData.labels.length).fill(0);
+        graph.data.datasets[0].pointBackgroundColor[index] = 'var(--ps-rose-dark)';
+        graph.data.datasets[0].pointRadius[index] = 5;
+
+        graph.update();
+    }
+
+    // Initialisation
+    drawCanvas(xSlider.value);
+    calculateTime(xSlider.value);
+    initializeGraph();
+    updateGraph(xSlider.value);
+</script>
+</body>
+</html>

@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dilution — PuiSciences</title>
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  :root {
+    --ps-vert:      #6fa882;
+    --ps-vert-pale: #d4ebe0;
+    --ps-vert-dark: #3d6b51;
+    --ps-bleu:      #87ceeb;
+    --ps-bleu-pale: #d6f0fb;
+    --ps-bleu-dark: #2a7fa8;
+    --ps-rose:      #e8799a;
+    --ps-rose-pale: #fce0e8;
+    --ps-rose-dark: #a03460;
+    --ps-gris:      #888888;
+    --ps-gris-pale: #f2f2f0;
+    --ps-gris-dark: #444441;
+    --ps-fond:      #fafaf8;
+    --ps-noir:      #2c2c2a;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'Georgia', serif;
+    --font-sans: system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--ps-fond);
+    color: var(--ps-noir);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: var(--ps-noir);
+    color: #f5f3ec;
+    padding: 1.6rem 2.5rem 1.4rem;
+    border-bottom: 3px solid var(--ps-rose);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .header-logo {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .header-text .subtitle {
+    font-size: 0.78rem;
+    color: #aaa;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .header-text h1 {
+    font-family: var(--font);
+    font-size: 1.65rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .tagline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+  }
+  .tagline-pill {
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .tp-v { background: var(--ps-vert);      color: #fff; }
+  .tp-b { background: var(--ps-bleu-dark); color: #fff; }
+  .tp-r { background: var(--ps-rose);      color: #fff; }
+  .tp-g { background: var(--ps-gris);      color: #fff; }
+
+  /* ── MAIN ── */
+  .main-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.75rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.88rem;
+  }
+  .callout-b { border-color: var(--ps-bleu); background: var(--ps-bleu-pale); color: var(--ps-bleu-dark); }
+  .callout-v { border-color: var(--ps-vert); background: var(--ps-vert-pale); color: var(--ps-vert-dark); }
+  .callout-r { border-color: var(--ps-rose); background: var(--ps-rose-pale); color: var(--ps-rose-dark); }
+  .callout-gris { border-color: var(--ps-gris); background: var(--ps-gris-pale); color: var(--ps-gris-dark); }
+  .callout strong { font-weight: 600; }
+
+  /* ── CARD ── */
+  .card {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ps-gris);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── COLLAPSIBLE CARDS ── */
+  .collapsible-card { 
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .collapsible-header {
+    padding: 1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #fff;
+  }
+  .collapsible-header:hover { background: #f8f9fa; }
+  .collapsible-icon {
+    transition: transform 0.3s;
+    font-size: 1.1rem;
+    color: var(--ps-gris);
+  }
+  .collapsible-content {
+    padding: 0 1.4rem 1rem;
+    animation: fadeIn 0.3s ease-out;
+    display: none;
+  }
+  .collapsible-content.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── HINT SYSTEM ── */
+  .hint-container {
+    margin-top: 0.8rem;
+    padding: 0.5rem;
+    background: var(--ps-bleu-pale);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--ps-bleu);
+  }
+  .hint-button {
+    background: var(--ps-bleu);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    transition: background 0.2s;
+  }
+  .hint-button:hover { background: var(--ps-bleu-dark); }
+  .hint-content {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--ps-bleu-dark);
+    display: none;
+  }
+  .hint-content.active { display: block; }
+
+  /* ── ANIMATION CONTAINERS ── */
+  .animation-section {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .animation-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ps-vert-dark);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .animation-canvas {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(to bottom, #f0f4f8 0%, #e8f0f5 100%);
+    border-radius: var(--radius-sm);
+    border: 1px solid #e0e0da;
+  }
+  .animation-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .btn-animation {
+    background: var(--ps-vert);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .btn-animation:hover { background: var(--ps-vert-dark); }
+  .btn-animation:disabled { 
+    background: var(--ps-gris);
+    cursor: not-allowed;
+  }
+
+  /* ── INFO PANEL ── */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--ps-gris-pale);
+    font-size: 0.88rem;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--ps-gris); }
+  .info-val {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: var(--ps-noir);
+    color: #f5f3ec;
+    border-radius: var(--radius);
+    padding: 0.8rem 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    margin: 0.8rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .formula-box .label {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center;
+    padding: 1.5rem 0 0;
+    border-top: 1px solid #e0e0da;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+  .page-footer a { color: var(--ps-bleu-dark); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .animation-canvas { height: 250px; }
+    .sim-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<div class="page-header">
+  <div class="header-logo">
+    <canvas id="logo-canvas" width="30" height="30"></canvas>
+  </div>
+  <div class="header-text">
+    <div class="subtitle">Laboratoire Couffignal</div>
+    <h1>Dilution des solutions</h1>
+    <div class="tagline">
+      <span class="tagline-pill tp-b">Chimie</span>
+      <span class="tagline-pill tp-v">Solution</span>
+      <span class="tagline-pill tp-r">Concentration</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MAIN CONTENT ══════════ -->
+<div class="main-wrap">
+
+  <!-- Introduction -->
+  <div class="callout callout-v">
+    <strong>Objectif :</strong> Comprendre comment une solution se dilue et ce qui change (ou ne change pas) au niveau microscopique.
+  </div>
+
+  <!-- Animation 1: Macroscopic Dilution Process -->
+  <div class="animation-section">
+    <div class="animation-title">1. Processus de dilution macroscopique</div>
+    <canvas id="macro-canvas" class="animation-canvas"></canvas>
+    <div class="animation-controls">
+      <button class="btn-animation" onclick="startMacroAnimation()" id="macro-start">Démarrer l'animation</button>
+      <button class="btn-animation" onclick="resetMacroAnimation()" id="macro-reset">Réinitialiser</button>
+    </div>
+    <div class="callout callout-b" style="margin-top: 1rem;">
+      <strong>Observation :</strong> La couleur de la solution s'éclaircit progressivement lors de l'ajout d'eau.
+    </div>
+  </div>
+
+  <!-- Animation 2: Microscopic Visualization -->
+  <div class="animation-section">
+    <div class="animation-title">2. Visualisation microscopique</div>
+    <canvas id="micro-canvas" class="animation-canvas"></canvas>
+    <div class="animation-controls">
+      <button class="btn-animation" onclick="startMicroAnimation()" id="micro-start">Démarrer l'animation</button>
+      <button class="btn-animation" onclick="resetMicroAnimation()" id="micro-reset">Réinitialiser</button>
+      <button class="btn-animation" onclick="toggleMicroView()" id="micro-toggle">Voir les molécules</button>
+    </div>
+    <div class="callout callout-r" style="margin-top: 1rem;">
+      <strong>Observation :</strong> Le nombre de molécules de soluté (rouges) reste constant, mais leur espacement augmente.
+    </div>
+  </div>
+
+  <!-- Theory Section -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-book"></i> Théorie de la dilution</div>
+    <div class="formula-box">
+      <span class="label">Formule</span>
+      <span>C₁ × V₁ = C₂ × V₂</span>
+    </div>
+    <p><strong>Principe :</strong> Lors d'une dilution, la quantité de matière de soluté reste constante. On ajoute simplement du solvant (généralement de l'eau).</p>
+    <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+      <li><strong>C₁</strong> : Concentration initiale (mol/L)</li>
+      <li><strong>V₁</strong> : Volume prélevé de la solution mère (L)</li>
+      <li><strong>C₂</strong> : Concentration finale (mol/L)</li>
+      <li><strong>V₂</strong> : Volume final de la solution fille (L)</li>
+    </ul>
+  </div>
+
+  <!-- Collapsible Questions -->
+  
+  <!-- Question 1 -->
+  <div class="collapsible-card">
+    <div class="collapsible-header" onclick="toggleCollapsible('q1')">
+      <i class="ti ti-chevron-right collapsible-icon" id="icon-q1"></i>
+      <span><strong>Question 1 :</strong> Pourquoi la couleur de la solution s'éclaircit-elle lors de la dilution ?</span>
+    </div>
+    <div class="collapsible-content" id="content-q1">
+      <p>La couleur d'une solution dépend de la concentration en espèces colorées.</p>
+      
+      <div class="hint-container">
+        <button class="hint-button" onclick="toggleHint('q1-hint1')">Indice 1</button>
+        <span class="hint-content" id="q1-hint1">La couleur est proportionnelle au nombre de particules colorées par unité de volume.</span>
+      </div>
+      
+      <div class="hint-container" style="margin-top: 0.5rem;">
+        <button class="hint-button" onclick="toggleHint('q1-hint2')">Indice 2</button>
+        <span class="hint-content" id="q1-hint2">Lorsqu'on ajoute de l'eau, le volume augmente mais la quantité de soluté reste la même.</span>
+      </div>
+      
+      <div class="hint-container" style="margin-top: 0.5rem;">
+        <button class="hint-button" onclick="toggleHint('q1-hint3')">Indice 3</button>
+        <span class="hint-content" id="q1-hint3">La concentration en soluté coloré diminue, donc la couleur devient moins intense.</span>
+      </div>
+      
+      <div style="margin-top: 1rem; padding: 0.5rem; background: var(--ps-vert-pale); border-radius: var(--radius-sm);">
+        <strong>Réponse :</strong> La couleur s'éclaircit car la concentration en soluté coloré diminue lorsque le volume de solution augmente.
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 2 -->
+  <div class="collapsible-card">
+    <div class="collapsible-header" onclick="toggleCollapsible('q2')">
+      <i class="ti ti-chevron-right collapsible-icon" id="icon-q2"></i>
+      <span><strong>Question 2 :</strong> Que devient la quantité de matière de soluté lors d'une dilution ?</span>
+    </div>
+    <div class="collapsible-content" id="content-q2">
+      <p>Analysez l'animation microscopique pour répondre.</p>
+      
+      <div class="hint-container">
+        <button class="hint-button" onclick="toggleHint('q2-hint1')">Indice 1</button>
+        <span class="hint-content" id="q2-hint1">Observez le nombre de molécules rouges avant et après dilution.</span>
+      </div>
+      
+      <div class="hint-container" style="margin-top: 0.5rem;">
+        <button class="hint-button" onclick="toggleHint('q2-hint2')">Indice 2</button>
+        <span class="hint-content" id="q2-hint2">Comptez les molécules de soluté dans les deux états de l'animation.</span>
+      </div>
+      
+      <div style="margin-top: 1rem; padding: 0.5rem; background: var(--ps-vert-pale); border-radius: var(--radius-sm);">
+        <strong>Réponse :</strong> La quantité de matière de soluté <strong>reste constante</strong> lors d'une dilution. Seule la concentration change.
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 3 -->
+  <div class="collapsible-card">
+    <div class="collapsible-header" onclick="toggleCollapsible('q3')">
+      <i class="ti ti-chevron-right collapsible-icon" id="icon-q3"></i>
+      <span><strong>Question 3 :</strong> On dilue 50 mL d'une solution de sulfate de cuivre de concentration 0,10 mol/L pour obtenir 250 mL de solution. Quelle est la nouvelle concentration ?</span>
+    </div>
+    <div class="collapsible-content" id="content-q3">
+      <p>Utilisez la formule de dilution : C₁ × V₁ = C₂ × V₂</p>
+      
+      <div class="formula-box" style="margin: 0.5rem 0;">
+        <span class="label">Données</span>
+        <span>C₁ = 0,10 mol/L | V₁ = 50 mL | V₂ = 250 mL</span>
+      </div>
+      
+      <div class="hint-container">
+        <button class="hint-button" onclick="toggleHint('q3-hint1')">Indice 1</button>
+        <span class="hint-content" id="q3-hint1">Convertissez les volumes en litres : 50 mL = 0,050 L et 250 mL = 0,250 L</span>
+      </div>
+      
+      <div class="hint-container" style="margin-top: 0.5rem;">
+        <button class="hint-button" onclick="toggleHint('q3-hint2')">Indice 2</button>
+        <span class="hint-content" id="q3-hint2">Calculez n = C₁ × V₁ = 0,10 × 0,050 = 0,005 mol (quantité de matière constante)</span>
+      </div>
+      
+      <div class="hint-container" style="margin-top: 0.5rem;">
+        <button class="hint-button" onclick="toggleHint('q3-hint3')">Indice 3</button>
+        <span class="hint-content" id="q3-hint3">C₂ = n / V₂ = 0,005 / 0,250 = 0,020 mol/L</span>
+      </div>
+      
+      <div style="margin-top: 1rem; padding: 0.5rem; background: var(--ps-vert-pale); border-radius: var(--radius-sm);">
+        <strong>Réponse :</strong> C₂ = 0,020 mol/L ou 2,0 × 10⁻² mol/L
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 4 -->
+  <div class="collapsible-card">
+    <div class="collapsible-header" onclick="toggleCollapsible('q4')">
+      <i class="ti ti-chevron-right collapsible-icon" id="icon-q4"></i>
+      <span><strong>Question 4 :</strong> Pourquoi dit-on que la dilution est une opération physique et non chimique ?</span>
+    </div>
+    <div class="collapsible-content" id="content-q4">
+      <p>Réfléchissez à ce qui se passe au niveau des espèces chimiques.</p>
+      
+      <div class="hint-container">
+        <button class="hint-button" onclick="toggleHint('q4-hint1')">Indice 1</button>
+        <span class="hint-content" id="q4-hint1">Observez l'animation microscopique : les molécules de soluté ne sont pas modifiées.</span>
+      </div>
+      
+      <div class="hint-container" style="margin-top: 0.5rem;">
+        <button class="hint-button" onclick="toggleHint('q4-hint2')">Indice 2</button>
+        <span class="hint-content" id="q4-hint2">Aucune réaction chimique ne se produit, aucune nouvelle espèce n'est formée.</span>
+      </div>
+      
+      <div style="margin-top: 1rem; padding: 0.5rem; background: var(--ps-vert-pale); border-radius: var(--radius-sm);">
+        <strong>Réponse :</strong> C'est une opération <strong>physique</strong> car il n'y a pas de transformation chimique. On ne fait que séparer davantage les molécules existantes en ajoutant du solvant.
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Card -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-check"></i> Résumé</div>
+    <ul style="padding-left: 1.5rem;">
+      <li><strong>Dilution = </strong> Ajout de solvant à une solution.</li>
+      <li><strong>Quantité de soluté :</strong> Constante (n₁ = n₂).</li>
+      <li><strong>Concentration :</strong> Diminue (C₂ < C₁).</li>
+      <li><strong>Volume :</strong> Augmente (V₂ > V₁).</li>
+      <li><strong>Formule :</strong> C₁V₁ = C₂V₂.</li>
+    </ul>
+    <div class="callout callout-v" style="margin-top: 1rem;">
+      <strong>À retenir :</strong> Une dilution ne change pas la nature des espèces chimiques, seulement leur concentration.
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="main-wrap" style="padding-top:0; padding-bottom:1rem;">
+  <div class="page-footer">
+    Gontier Adrien ·
+    <a href="https://bio.link/puisciences">PuiSciences</a> ·
+    <a href="https://play.google.com/store/apps/details?id=com.adriengontier.puisciences_college_light">Application Android</a> ·
+    <a href="https://www.instagram.com/puisciencest">Instagram</a> ·
+    <a href="https://www.tiktok.com/@puisciences">TikTok</a> ·
+    <a href="https://www.youtube.com/channel/UClWym-97b-IIA4_wuWJIzPA">Youtube</a>
+  </div>
+</div>
+
+<!-- ══════════ SCRIPT ══════════ -->
+<script>
+// Logo rendering
+var images=['data:image/bmp;base64,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'];
+
+function LoadImagesAndRender(){
+  var loadedImages=0;
+  for(var i=0;i<images.length;i++){
+    var source=images[i];
+    images[i]=new Image();
+    images[i].src=source;
+    images[i].onload=function(){
+      loadedImages++;
+      if(loadedImages==images.length){RenderLogo();}
+    };
+  }
+}
+
+function RenderLogo(){
+  let canvas = document.getElementById('logo-canvas');
+  if(canvas) {
+    let ctx = canvas.getContext('2d');
+    canvas.width = 30;
+    canvas.height = 30;
+    ctx.drawImage(images[0], 0, 0, 100, 100, 0, 0, 30, 30);
+  }
+}
+
+window.addEventListener('load', LoadImagesAndRender);
+
+// Collapsible functionality
+function toggleCollapsible(id) {
+  const content = document.getElementById('content-' + id);
+  const icon = document.getElementById('icon-' + id);
+  
+  if (content.classList.contains('active')) {
+    content.classList.remove('active');
+    icon.style.transform = 'rotate(0deg)';
+  } else {
+    content.classList.add('active');
+    icon.style.transform = 'rotate(90deg)';
+  }
+}
+
+// Hint functionality
+function toggleHint(id) {
+  const hint = document.getElementById(id);
+  if (hint.classList.contains('active')) {
+    hint.classList.remove('active');
+  } else {
+    hint.classList.add('active');
+  }
+}
+
+// ==================== MACROSCOPIC ANIMATION ====================
+
+class MacroDilutionAnimation {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
+    
+    // Animation state
+    this.state = 'initial'; // 'initial', 'pipette_down', 'transfer', 'water_add', 'mixing', 'final'
+    this.progress = 0;
+    this.animationId = null;
+    
+    // Colors
+    this.solutionColor = '#2a7fa8'; // Deep blue for concentrated solution
+    this.dilutedColor = '#87ceeb'; // Light blue for diluted solution
+    this.waterColor = '#d6f0fb'; // Very light blue for water
+    
+    // Elements
+    this.flask = {
+      x: this.width * 0.7,
+      y: this.height * 0.6,
+      width: this.width * 0.25,
+      height: this.height * 0.35
+    };
+    
+    this.pipette = {
+      x: this.width * 0.2,
+      y: this.height * 0.2,
+      width: this.width * 0.1,
+      height: this.height * 0.3
+    };
+    
+    this.beaker = {
+      x: this.width * 0.2,
+      y: this.height * 0.55,
+      width: this.width * 0.2,
+      height: this.height * 0.3
+    };
+    
+    // Solution level
+    this.beakerLevel = 0.7; // 70% full
+    this.flaskLevel = 0.3; // 30% full initially
+    this.targetFlaskLevel = 0.8; // Target 80% full
+    
+    // Pipette state
+    this.pipetteAngle = 0;
+    this.pipetteExtended = false;
+    this.pipetteContent = 0;
+    
+    // Water drop
+    this.waterDrops = [];
+    this.waterDropTimer = 0;
+    
+    // Color transition
+    this.currentColor = this.solutionColor;
+    
+    this.setup();
+  }
+  
+  setup() {
+    // Resize handling
+    window.addEventListener('resize', () => this.resize());
+    this.resize();
+  }
+  
+  resize() {
+    const container = this.canvas.parentElement;
+    this.width = container.clientWidth;
+    this.height = 300;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    
+    // Recalculate positions
+    this.flask = {
+      x: this.width * 0.7,
+      y: this.height * 0.6,
+      width: this.width * 0.25,
+      height: this.height * 0.35
+    };
+    
+    this.pipette = {
+      x: this.width * 0.2,
+      y: this.height * 0.2,
+      width: this.width * 0.1,
+      height: this.height * 0.3
+    };
+    
+    this.beaker = {
+      x: this.width * 0.2,
+      y: this.height * 0.55,
+      width: this.width * 0.2,
+      height: this.height * 0.3
+    };
+    
+    this.reset();
+  }
+  
+  reset() {
+    this.state = 'initial';
+    this.progress = 0;
+    this.pipetteAngle = 0;
+    this.pipetteExtended = false;
+    this.pipetteContent = 0;
+    this.waterDrops = [];
+    this.waterDropTimer = 0;
+    this.currentColor = this.solutionColor;
+    this.flaskLevel = 0.3;
+    this.beakerLevel = 0.7;
+    
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+    
+    document.getElementById('macro-start').disabled = false;
+    document.getElementById('macro-reset').disabled = true;
+    
+    this.draw();
+  }
+  
+  start() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
+    
+    document.getElementById('macro-start').disabled = true;
+    document.getElementById('macro-reset').disabled = false;
+    
+    this.state = 'initial';
+    this.progress = 0;
+    this.animate();
+  }
+  
+  animate() {
+    this.progress += 0.01;
+    
+    // State transitions
+    if (this.state === 'initial' && this.progress >= 0.5) {
+      this.state = 'pipette_down';
+      this.progress = 0;
+    } else if (this.state === 'pipette_down' && this.progress >= 1.0) {
+      this.state = 'transfer';
+      this.progress = 0;
+    } else if (this.state === 'transfer' && this.progress >= 1.0) {
+      this.state = 'water_add';
+      this.progress = 0;
+    } else if (this.state === 'water_add' && this.progress >= 1.5) {
+      this.state = 'mixing';
+      this.progress = 0;
+    } else if (this.state === 'mixing' && this.progress >= 1.0) {
+      this.state = 'final';
+      this.progress = 0;
+    } else if (this.state === 'final' && this.progress >= 1.0) {
+      this.progress = 1.0;
+    }
+    
+    // Update animation based on state
+    this.update();
+    this.draw();
+    
+    if (this.state !== 'final' || this.progress < 1.0) {
+      this.animationId = requestAnimationFrame(() => this.animate());
+    } else {
+      document.getElementById('macro-start').disabled = false;
+    }
+  }
+  
+  update() {
+    switch (this.state) {
+      case 'initial':
+        // Move pipette towards beaker
+        this.pipetteAngle = Math.sin(this.progress * Math.PI) * 15;
+        break;
+        
+      case 'pipette_down':
+        // Extend pipette into beaker
+        this.pipetteExtended = true;
+        this.pipetteContent = this.progress;
+        this.beakerLevel = 0.7 - this.progress * 0.1;
+        break;
+        
+      case 'transfer':
+        // Move pipette to flask
+        const transferProgress = this.progress;
+        this.pipette.x = this.width * 0.2 + (this.width * 0.5) * transferProgress;
+        this.pipette.y = this.height * 0.2 + (this.height * 0.4) * transferProgress;
+        this.pipetteExtended = true;
+        
+        // Add solution to flask
+        this.flaskLevel = 0.3 + transferProgress * 0.3;
+        this.currentColor = this.mixColors(this.solutionColor, this.waterColor, transferProgress);
+        break;
+        
+      case 'water_add':
+        // Add water drops to flask
+        this.waterDropTimer++;
+        if (this.waterDropTimer % 10 === 0) {
+          this.waterDrops.push({
+            x: this.width * 0.5 + Math.random() * this.width * 0.2,
+            y: this.height * 0.1,
+            size: 5 + Math.random() * 5,
+            speed: 2 + Math.random() * 3
+          });
+        }
+        
+        // Update water drops
+        this.waterDrops = this.waterDrops.filter(drop => {
+          drop.y += drop.speed;
+          if (drop.y > this.flask.y + this.flask.height * this.flaskLevel) {
+            this.flaskLevel = Math.min(0.8, this.flaskLevel + 0.005);
+            return false;
+          }
+          return true;
+        });
+        
+        // Update color based on dilution
+        const dilutionFactor = 0.3 + this.progress * 0.5;
+        this.currentColor = this.mixColors(this.solutionColor, this.waterColor, dilutionFactor);
+        break;
+        
+      case 'mixing':
+        // Swirl effect
+        this.pipette.x = this.width * 0.7;
+        this.pipette.y = this.height * 0.2;
+        this.pipetteExtended = false;
+        
+        // Final color
+        this.currentColor = this.dilutedColor;
+        this.flaskLevel = this.targetFlaskLevel;
+        break;
+        
+      case 'final':
+        // Final state
+        this.currentColor = this.dilutedColor;
+        break;
+    }
+  }
+  
+  mixColors(color1, color2, factor) {
+    const c1 = this.hexToRgb(color1);
+    const c2 = this.hexToRgb(color2);
+    
+    const r = Math.round(c1.r + (c2.r - c1.r) * factor);
+    const g = Math.round(c1.g + (c2.g - c1.g) * factor);
+    const b = Math.round(c1.b + (c2.b - c1.b) * factor);
+    
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  
+  hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
+  }
+  
+  draw() {
+    // Clear canvas
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    
+    // Draw background gradient
+    const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+    gradient.addColorStop(0, '#f0f4f8');
+    gradient.addColorStop(1, '#e8f0f5');
+    this.ctx.fillStyle = gradient;
+    this.ctx.fillRect(0, 0, this.width, this.height);
+    
+    // Draw beaker (solution mère)
+    this.drawBeaker(this.beaker.x, this.beaker.y, this.beaker.width, this.beaker.height, this.beakerLevel, this.solutionColor);
+    
+    // Draw flask (solution fille)
+    this.drawFlask(this.flask.x, this.flask.y, this.flask.width, this.flask.height, this.flaskLevel, this.currentColor);
+    
+    // Draw pipette
+    this.drawPipette();
+    
+    // Draw water drops
+    this.waterDrops.forEach(drop => {
+      this.ctx.fillStyle = this.waterColor;
+      this.ctx.beginPath();
+      this.ctx.arc(drop.x, drop.y, drop.size / 2, 0, Math.PI * 2);
+      this.ctx.fill();
+    });
+    
+    // Draw labels
+    this.ctx.fillStyle = '#2c2c2a';
+    this.ctx.font = 'bold 14px system-ui';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('Solution mère', this.beaker.x + this.beaker.width / 2, this.beaker.y - 10);
+    this.ctx.fillText('Solution fille', this.flask.x + this.flask.width / 2, this.flask.y - 10);
+    
+    // Draw state indicator
+    let stateText = '';
+    switch (this.state) {
+      case 'initial': stateText = 'Prélèvement de la solution mère'; break;
+      case 'pipette_down': stateText = 'Aspiration...'; break;
+      case 'transfer': stateText = 'Transfert dans la fiole'; break;
+      case 'water_add': stateText = 'Ajout d\'eau distillée'; break;
+      case 'mixing': stateText = 'Homogénéisation'; break;
+      case 'final': stateText = 'Solution diluée'; break;
+    }
+    this.ctx.fillStyle = '#444441';
+    this.ctx.font = '12px system-ui';
+    this.ctx.fillText(stateText, this.width / 2, this.height - 10);
+  }
+  
+  drawBeaker(x, y, width, height, level, color) {
+    // Beaker shape
+    this.ctx.strokeStyle = '#444441';
+    this.ctx.lineWidth = 2;
+    
+    // Beaker body
+    this.ctx.beginPath();
+    this.ctx.moveTo(x, y + height);
+    this.ctx.lineTo(x, y + height * 0.8);
+    this.ctx.lineTo(x + width * 0.2, y + height * 0.7);
+    this.ctx.lineTo(x + width * 0.8, y + height * 0.7);
+    this.ctx.lineTo(x + width, y + height * 0.8);
+    this.ctx.lineTo(x + width, y + height);
+    this.ctx.stroke();
+    
+    // Beaker base
+    this.ctx.beginPath();
+    this.ctx.moveTo(x, y + height);
+    this.ctx.lineTo(x + width, y + height);
+    this.ctx.stroke();
+    
+    // Solution in beaker
+    const solutionHeight = height * 0.8 * level;
+    const solutionY = y + height - solutionHeight;
+    
+    this.ctx.fillStyle = color;
+    this.ctx.beginPath();
+    this.ctx.moveTo(x + 1, solutionY);
+    this.ctx.lineTo(x + width * 0.2, solutionY + height * 0.1);
+    this.ctx.lineTo(x + width * 0.8, solutionY + height * 0.1);
+    this.ctx.lineTo(x + width - 1, solutionY);
+    this.ctx.lineTo(x + width - 1, y + height - 1);
+    this.ctx.lineTo(x + 1, y + height - 1);
+    this.ctx.closePath();
+    this.ctx.fill();
+    
+    // Solution surface reflection
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    this.ctx.beginPath();
+    this.ctx.moveTo(x + 1, solutionY);
+    this.ctx.lineTo(x + width * 0.2, solutionY + height * 0.02);
+    this.ctx.lineTo(x + width * 0.8, solutionY + height * 0.02);
+    this.ctx.lineTo(x + width - 1, solutionY);
+    this.ctx.closePath();
+    this.ctx.fill();
+  }
+  
+  drawFlask(x, y, width, height, level, color) {
+    // Flask shape (conical)
+    this.ctx.strokeStyle = '#444441';
+    this.ctx.lineWidth = 2;
+    
+    // Flask body
+    this.ctx.beginPath();
+    this.ctx.moveTo(x + width / 2, y);
+    this.ctx.lineTo(x + width * 0.8, y + height * 0.4);
+    this.ctx.lineTo(x + width * 0.8, y + height);
+    this.ctx.lineTo(x + width * 0.2, y + height);
+    this.ctx.lineTo(x + width * 0.2, y + height * 0.4);
+    this.ctx.closePath();
+    this.ctx.stroke();
+    
+    // Flask neck
+    this.ctx.beginPath();
+    this.ctx.moveTo(x + width / 2, y);
+    this.ctx.lineTo(x + width / 2, y + height * 0.1);
+    this.ctx.stroke();
+    
+    // Solution in flask
+    const solutionHeight = height * level;
+    const solutionY = y + height - solutionHeight;
+    
+    this.ctx.fillStyle = color;
+    this.ctx.beginPath();
+    this.ctx.moveTo(x + width * 0.2 + 1, solutionY);
+    this.ctx.lineTo(x + width * 0.8 - 1, solutionY);
+    this.ctx.lineTo(x + width * 0.8 - 1, y + height - 1);
+    this.ctx.lineTo(x + width * 0.2 + 1, y + height - 1);
+    this.ctx.closePath();
+    this.ctx.fill();
+    
+    // Solution surface
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    this.ctx.beginPath();
+    this.ctx.ellipse(x + width / 2, solutionY, width * 0.3, height * 0.02, 0, 0, Math.PI * 2);
+    this.ctx.fill();
+  }
+  
+  drawPipette() {
+    const px = this.pipette.x;
+    const py = this.pipette.y;
+    const pw = this.pipette.width;
+    const ph = this.pipette.height;
+    
+    // Pipette body
+    this.ctx.strokeStyle = '#444441';
+    this.ctx.lineWidth = 2;
+    this.ctx.fillStyle = '#f5f3ec';
+    
+    this.ctx.beginPath();
+    this.ctx.moveTo(px + pw / 2, py);
+    this.ctx.lineTo(px + pw / 2, py + ph * 0.8);
+    
+    // Pipette bulb
+    this.ctx.ellipse(px + pw / 2, py + ph * 0.2, pw * 0.4, ph * 0.15, 0, 0, Math.PI * 2);
+    
+    // Pipette tip
+    if (this.pipetteExtended) {
+      this.ctx.lineTo(px + pw / 2, py + ph * 0.8 + 40);
+    } else {
+      this.ctx.lineTo(px + pw / 2, py + ph);
+    }
+    this.ctx.stroke();
+    
+    this.ctx.fillStyle = '#f5f3ec';
+    this.ctx.beginPath();
+    this.ctx.ellipse(px + pw / 2, py + ph * 0.2, pw * 0.4, ph * 0.15, 0, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    // Pipette content (if any)
+    if (this.pipetteContent > 0) {
+      const contentHeight = ph * 0.6 * this.pipetteContent;
+      this.ctx.fillStyle = this.solutionColor;
+      this.ctx.beginPath();
+      this.ctx.rect(px + pw * 0.35, py + ph * 0.3, pw * 0.3, contentHeight);
+      this.ctx.fill();
+    }
+    
+    // Rotation
+    if (this.pipetteAngle !== 0) {
+      this.ctx.save();
+      this.ctx.translate(px + pw / 2, py + ph / 2);
+      this.ctx.rotate(this.pipetteAngle * Math.PI / 180);
+      this.ctx.translate(-px - pw / 2, -py - ph / 2);
+      
+      // Redraw pipette rotated
+      this.ctx.strokeStyle = '#444441';
+      this.ctx.lineWidth = 2;
+      this.ctx.beginPath();
+      this.ctx.moveTo(px + pw / 2, py);
+      this.ctx.lineTo(px + pw / 2, py + ph);
+      this.ctx.stroke();
+      
+      this.ctx.restore();
+    }
+  }
+}
+
+// ==================== MICROSCOPIC ANIMATION ====================
+
+class MicroDilutionAnimation {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
+    
+    // Animation state
+    this.state = 'concentrated'; // 'concentrated', 'diluting', 'diluted'
+    this.progress = 0;
+    this.animationId = null;
+    
+    // Molecules
+    this.soluteMolecules = [];
+    this.solventMolecules = [];
+    this.showMolecules = true;
+    this.moleculeSize = 8;
+    
+    // Colors
+    this.soluteColor = '#e8799a'; // Rose for solute
+    this.solventColor = '#87ceeb'; // Blue for solvent (water)
+    this.backgroundColor = '#f0f4f8';
+    
+    // Grid
+    this.gridSize = 20;
+    this.showGrid = false;
+    
+    this.setup();
+  }
+  
+  setup() {
+    window.addEventListener('resize', () => this.resize());
+    this.resize();
+    this.createMolecules();
+  }
+  
+  resize() {
+    const container = this.canvas.parentElement;
+    this.width = container.clientWidth;
+    this.height = 300;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    
+    this.createMolecules();
+    this.draw();
+  }
+  
+  createMolecules() {
+    const numSolute = 30; // Fixed number of solute molecules
+    const numSolventInitial = 150;
+    const numSolventFinal = 400;
+    
+    this.soluteMolecules = [];
+    this.solventMolecules = [];
+    
+    // Create solute molecules (red)
+    for (let i = 0; i < numSolute; i++) {
+      this.soluteMolecules.push({
+        x: Math.random() * this.width,
+        y: Math.random() * this.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+      });
+    }
+    
+    // Create initial solvent molecules
+    for (let i = 0; i < numSolventInitial; i++) {
+      this.solventMolecules.push({
+        x: Math.random() * this.width,
+        y: Math.random() * this.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+      });
+    }
+    
+    this.targetSolventCount = numSolventFinal;
+  }
+  
+  reset() {
+    this.state = 'concentrated';
+    this.progress = 0;
+    
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+    
+    document.getElementById('micro-start').disabled = false;
+    document.getElementById('micro-reset').disabled = true;
+    
+    this.createMolecules();
+    this.draw();
+  }
+  
+  start() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
+    
+    document.getElementById('micro-start').disabled = true;
+    document.getElementById('micro-reset').disabled = false;
+    
+    this.state = 'diluting';
+    this.progress = 0;
+    this.initialSolventCount = this.solventMolecules.length;
+    this.animate();
+  }
+  
+  toggleView() {
+    this.showMolecules = !this.showMolecules;
+    this.draw();
+  }
+  
+  animate() {
+    this.progress += 0.005;
+    
+    // Add more solvent molecules gradually
+    if (this.state === 'diluting' && this.progress < 1.0) {
+      const moleculesToAdd = Math.floor((this.targetSolventCount - this.initialSolventCount) * this.progress);
+      
+      while (this.solventMolecules.length < this.initialSolventCount + moleculesToAdd) {
+        this.solventMolecules.push({
+          x: Math.random() * this.width,
+          y: Math.random() * this.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5
+        });
+      }
+      
+      // Expand the container (simulate increasing volume)
+      const scale = 1 + this.progress * 0.5;
+      
+      // Move molecules outward
+      this.soluteMolecules.forEach(m => {
+        const dx = (m.x - this.width / 2) * 0.001;
+        const dy = (m.y - this.height / 2) * 0.001;
+        m.x += dx;
+        m.y += dy;
+      });
+      
+      this.solventMolecules.forEach(m => {
+        const dx = (m.x - this.width / 2) * 0.001;
+        const dy = (m.y - this.height / 2) * 0.001;
+        m.x += dx;
+        m.y += dy;
+      });
+    } else if (this.state === 'diluting' && this.progress >= 1.0) {
+      this.state = 'diluted';
+      this.progress = 0;
+    }
+    
+    // Random movement
+    this.soluteMolecules.forEach(m => {
+      m.x += m.vx;
+      m.y += m.vy;
+      
+      // Bounce off walls
+      if (m.x < 0 || m.x > this.width) m.vx *= -1;
+      if (m.y < 0 || m.y > this.height) m.vy *= -1;
+    });
+    
+    this.solventMolecules.forEach(m => {
+      m.x += m.vx;
+      m.y += m.vy;
+      
+      // Bounce off walls
+      if (m.x < 0 || m.x > this.width) m.vx *= -1;
+      if (m.y < 0 || m.y > this.height) m.vy *= -1;
+    });
+    
+    this.draw();
+    
+    if (this.state === 'diluting' || (this.state === 'diluted' && this.progress < 1.0)) {
+      this.animationId = requestAnimationFrame(() => this.animate());
+    } else {
+      document.getElementById('micro-start').disabled = false;
+    }
+  }
+  
+  draw() {
+    // Clear canvas
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    
+    // Draw background
+    this.ctx.fillStyle = this.backgroundColor;
+    this.ctx.fillRect(0, 0, this.width, this.height);
+    
+    if (!this.showMolecules) {
+      // Draw a message
+      this.ctx.fillStyle = '#444441';
+      this.ctx.font = '16px system-ui';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText('Visualisation moléculaire désactivée', this.width / 2, this.height / 2);
+      return;
+    }
+    
+    // Draw grid (optional)
+    if (this.showGrid) {
+      this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+      this.ctx.lineWidth = 0.5;
+      
+      for (let x = 0; x < this.width; x += this.gridSize) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, 0);
+        this.ctx.lineTo(x, this.height);
+        this.ctx.stroke();
+      }
+      
+      for (let y = 0; y < this.height; y += this.gridSize) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, y);
+        this.ctx.lineTo(this.width, y);
+        this.ctx.stroke();
+      }
+    }
+    
+    // Draw solvent molecules (blue)
+    this.ctx.fillStyle = this.solventColor;
+    this.solventMolecules.forEach(m => {
+      this.ctx.beginPath();
+      this.ctx.arc(m.x, m.y, this.moleculeSize / 2, 0, Math.PI * 2);
+      this.ctx.fill();
+    });
+    
+    // Draw solute molecules (red) - on top
+    this.ctx.fillStyle = this.soluteColor;
+    this.soluteMolecules.forEach(m => {
+      this.ctx.beginPath();
+      this.ctx.arc(m.x, m.y, this.moleculeSize / 2, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      // Add a highlight
+      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      this.ctx.beginPath();
+      this.ctx.arc(m.x - 2, m.y - 2, this.moleculeSize / 4, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.fillStyle = this.soluteColor;
+    });
+    
+    // Draw container border
+    this.ctx.strokeStyle = '#444441';
+    this.ctx.lineWidth = 2;
+    this.ctx.strokeRect(5, 5, this.width - 10, this.height - 10);
+    
+    // Draw labels
+    this.ctx.fillStyle = '#2c2c2a';
+    this.ctx.font = 'bold 14px system-ui';
+    this.ctx.textAlign = 'left';
+    
+    let stateText = '';
+    switch (this.state) {
+      case 'concentrated': 
+        stateText = 'Solution concentrée: Molécules de soluté proches';
+        break;
+      case 'diluting': 
+        stateText = 'Dilution en cours: Ajout de solvant';
+        break;
+      case 'diluted': 
+        stateText = 'Solution diluée: Molécules de soluté espacées';
+        break;
+    }
+    this.ctx.fillText(stateText, 10, this.height - 20);
+    
+    // Draw count
+    this.ctx.textAlign = 'right';
+    this.ctx.fillText(`Soluté: ${this.soluteMolecules.length} | Solvant: ${this.solventMolecules.length}`, this.width - 10, this.height - 20);
+  }
+}
+
+// Initialize animations
+let macroAnimation;
+let microAnimation;
+
+function initAnimations() {
+  macroAnimation = new MacroDilutionAnimation('macro-canvas');
+  microAnimation = new MicroDilutionAnimation('micro-canvas');
+}
+
+function startMacroAnimation() {
+  if (macroAnimation) macroAnimation.start();
+}
+
+function resetMacroAnimation() {
+  if (macroAnimation) macroAnimation.reset();
+}
+
+function startMicroAnimation() {
+  if (microAnimation) microAnimation.start();
+}
+
+function resetMicroAnimation() {
+  if (microAnimation) microAnimation.reset();
+}
+
+function toggleMicroView() {
+  if (microAnimation) microAnimation.toggleView();
+}
+
+// Initialize when page loads
+window.addEventListener('load', function() {
+  initAnimations();
+});
+
+// Auto-initialize animations
+window.addEventListener('DOMContentLoaded', initAnimations);
+</script>
+</body>
+</html>

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radioactivité — PuiSciences</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  :root {
+    --ps-vert: #6fa882;
+    --ps-vert-pale: #d4ebe0;
+    --ps-vert-dark: #3d6b51;
+    --ps-bleu: #87ceeb;
+    --ps-bleu-pale: #d6f0fb;
+    --ps-bleu-dark: #2a7fa8;
+    --ps-rose: #e8799a;
+    --ps-rose-pale: #fce0e8;
+    --ps-rose-dark: #a03460;
+    --ps-gris: #888888;
+    --ps-gris-pale: #f2f2f0;
+    --ps-gris-dark: #444441;
+    --ps-fond: #fafaf8;
+    --ps-noir: #2c2c2a;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'Georgia', serif;
+    --font-sans: system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+      /* FORMULA BOX */
+  .formula-box {
+    background: var(--ps-noir); color: #f5f3ec;
+    border-radius: var(--radius); padding: 0.8rem 1.2rem;
+    font-family: 'Courier New', monospace; font-size: 1rem;
+    letter-spacing: 0.03em; margin: 0.8rem 0;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .formula-box .label {
+    font-family: var(--font-sans); font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: #aaa; min-width: 90px; flex-shrink: 0;
+  }
+  
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--ps-fond);
+    color: var(--ps-noir);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .page-header {
+    background: var(--ps-noir);
+    color: #f5f3ec;
+    padding: 1.6rem 2.5rem 1.4rem;
+    border-bottom: 3px solid var(--ps-rose);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .header-text h1 {
+    font-family: var(--font);
+    font-size: 1.65rem;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .tagline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+  }
+  .tagline-pill {
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .tp-v { background: var(--ps-vert); color: #fff; }
+  .tp-b { background: var(--ps-bleu-dark); color: #fff; }
+  .tp-r { background: var(--ps-rose); color: #fff; }
+  .tp-g { background: var(--ps-gris); color: #fff; }
+
+  /* Main */
+  .main-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 900px;    /* ← NOUVEAU */
+  margin: 0 auto;       /* ← NOUVEAU */
+}
+.chart-container {
+  width: 800px;          /* Largeur FIXE */
+  height: 400px;         /* Hauteur FIXE */
+  margin: 20px auto;     /* Centre le graphique */
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-sizing: border-box; /* Inclut le padding dans les dimensions */
+}
+  .card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ps-gris);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Callouts */
+  .callout {
+    border-left: 3px solid;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.75rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.88rem;
+  }
+  .callout-b { border-color: var(--ps-bleu); background: var(--ps-bleu-pale); color: var(--ps-bleu-dark); }
+  .callout-v { border-color: var(--ps-vert); background: var(--ps-vert-pale); color: var(--ps-vert-dark); }
+  .callout-r { border-color: var(--ps-rose); background: var(--ps-rose-pale); color: var(--ps-rose-dark); }
+  .callout-gris { border-color: var(--ps-gris); background: var(--ps-gris-pale); color: var(--ps-gris-dark); }
+  .callout strong { font-weight: 600; }
+
+  /* Buttons */
+  .btn-launch {
+    background: var(--ps-vert);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+  }
+  .btn-launch:hover { background: var(--ps-vert-dark); }
+
+  /* Simulation micro-ondes */
+ .microwave-space {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  background: #fafafa;
+  padding: 30px;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+  margin-bottom: 40px;
+}
+
+.microwave-container {
+  position: relative;
+
+  min-height: 520px;
+
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  overflow: visible;
+
+  padding: 20px;
+}
+
+  /* Micro-ondes */
+  .microwave {
+    width: 200px;
+    height: 150px;
+    background: #333;
+    border-radius: 10px;
+    position: relative;
+    border: 3px solid #555;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  .microwave-door {
+    position: absolute;
+    width: 180px;
+    height: 100px;
+    background: #111;
+    border-radius: 0 0 10px 10px;
+    bottom: 0;
+    left: 10px;
+    border: 2px solid #444;
+    border-top: none;
+  }
+
+  .microwave-window {
+    position: absolute;
+    width: 160px;
+    height: 80px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    bottom: 10px;
+    left: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* Grains de maïs et pop-corn */
+  .grains-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .grain {
+    width: 12px;
+    height: 12px;
+    background: #f7d060;
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+.popcorn {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+
+  opacity: 0;
+
+  transform: scale(0) rotate(0deg);
+
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease;
+
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+}
+
+/* Partie centrale */
+.popcorn::before,
+.popcorn::after {
+  content: "";
+  position: absolute;
+  background: #fffaf2;
+  border-radius: 50%;
+}
+
+/* Bosse 1 */
+.popcorn::before {
+  width: 16px;
+  height: 16px;
+  left: 4px;
+  top: 8px;
+
+  box-shadow:
+    -8px -2px 0 2px #fffdf8,
+    7px -5px 0 1px #fff8ee,
+    -3px -10px 0 2px #ffffff,
+    10px 6px 0 -1px #f6ead7;
+}
+
+/* Bosse 2 */
+.popcorn::after {
+  width: 14px;
+  height: 14px;
+  left: 8px;
+  top: 3px;
+
+  background: #fffefc;
+
+  box-shadow:
+    -10px 8px 0 0 #fffaf0,
+    8px 10px 0 -1px #f8ead2;
+}
+
+  .popcorn::before {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    top: -3px;
+    left: 5px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  /* Timer et infos */
+  .timer {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--ps-noir);
+    margin: 10px 0;
+    text-align: center;
+  }
+
+#graph-container {
+  position: relative;
+
+  width: 100%;
+  height: 340px;
+
+  margin-top: 25px;
+}
+
+  /* Questions */
+  .level-panel-questions { display: none; }
+  .level-panel-questions.active { display: block; }
+  .question-block {
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .q-head {
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-num {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #fff;
+  }
+  .qn-s { background: var(--ps-bleu-dark); }
+  .qn-p { background: var(--ps-vert-dark); }
+  .qn-t { background: var(--ps-rose-dark); }
+  .qn-sp { background: var(--ps-gris-dark); }
+  .q-text { font-size: 0.92rem; line-height: 1.5; flex: 1; }
+  .q-arrow { color: #ccc; font-size: 1rem; transition: transform 0.2s; margin-top: 4px; }
+  .q-head.open .q-arrow { transform: rotate(90deg); }
+  .q-answer {
+    display: none;
+    background: var(--ps-gris-pale);
+    padding: 0.9rem 1.1rem 0.9rem 3.1rem;
+    font-size: 0.88rem;
+    color: #444;
+    border-top: 1px solid #e0e0da;
+  }
+  .q-answer.visible { display: block; }
+  .answer-formula {
+    font-family: 'Courier New', monospace;
+    background: #fff;
+    border: 1px solid #e0e0da;
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.7rem;
+    margin-top: 0.4rem;
+    font-size: 0.92rem;
+    display: inline-block;
+  }
+
+  /* Footer */
+  .page-footer {
+    text-align: center;
+    padding: 1.5rem 0 0;
+    border-top: 1px solid #e0e0da;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+  .page-footer a { color: var(--ps-bleu-dark); }
+  
+  /* === SIMULATION LAYOUT === */
+.simulation-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* === MICRO + CONTROLS WRAPPER === */
+.microwave-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === MICRO ONDES === */
+.microwave {
+  width: 280px;
+  height: 180px;
+  background: linear-gradient(145deg, #3a3a3a, #1f1f1f);
+  border-radius: 12px;
+  position: relative;
+  border: 2px solid #555;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* porte */
+.microwave-door {
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
+  width: 200px;
+  height: 120px;
+  background: #0d0d0d;
+  border-radius: 8px;
+  border: 2px solid #333;
+  overflow: hidden;
+}
+
+/* vitre */
+.microwave-window {
+  position: absolute;
+  width: 180px;
+  height: 100px;
+  top: 10px;
+  left: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+}
+
+/* panneau boutons à droite */
+.microwave-panel {
+  position: absolute;
+  right: 8px;
+  top: 20px;
+  width: 40px;
+  height: 140px;
+  background: #2b2b2b;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.microwave-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #777;
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.6);
+}
+
+/* grains / pop corn dans la porte */
+.grains-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+/* === GRAPHE FULL WIDTH === */
+.chart-container {
+  width: 100%;
+  height: 380px;
+}
+#graph-container {
+  width: 100%;
+}
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.microwave-row{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap; /* responsive */
+}
+
+.microwave-controls{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 160px;
+}
+  
+  
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-text">
+
+    <h1>Simulation : Radioactivité</h1>
+    <div class="tagline">
+      <span class="tagline-pill tp-b">Désintégration</span>
+      <span class="tagline-pill tp-v">Demi-vie</span>
+      <span class="tagline-pill tp-r">Noyaux radioactifs</span>
+      <span class="tagline-pill tp-g">Fils</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrap">
+  <!-- Callouts -->
+  <div class="callout callout-gris" style="margin-top:0.5rem;">
+    La radioactivité est un phénomène naturel où des noyaux atomiques instables se transforment en d'autres noyaux.
+  </div>
+  <div class="callout callout-v" style="margin-top:0.5rem;">
+    <strong>Analogie :</strong> Comme le maïs qui se transforme en pop-corn dans un micro-ondes, les noyaux pères se transforment en noyaux fils !
+  </div>
+
+  <!-- Simulation -->
+  <div class="card">
+    <div class="card-title">
+      <i class="ti ti-radiation"></i> Simulation : Désintégration radioactive
+    </div>
+    <div class="microwave-space">
+
+<div class="simulation-layout">
+
+  <div class="microwave-row">
+
+    <div class="microwave-wrapper">
+
+      <div class="microwave">
+
+        <div class="microwave-panel">
+          <div class="microwave-btn"></div>
+          <div class="microwave-btn"></div>
+        </div>
+
+        <div class="microwave-door">
+          <div class="microwave-window"></div>
+          <div class="grains-container" id="grainsContainer"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 🔥 NOUVEAU : colonne droite -->
+    <div class="microwave-controls">
+
+      <button class="btn-launch" id="startBtn" onclick="startSimulation()">
+        <i class="ti ti-player-play"></i> Démarrer
+      </button>
+
+      <button class="btn-launch" id="resetBtn" onclick="resetSimulation()" style="display:none;">
+        <i class="ti ti-refresh"></i> Réinitialiser
+      </button>
+
+      <div class="timer" id="timer">Temps: 0 s</div>
+
+    </div>
+
+  </div>
+
+  <!-- GRAPH FULL WIDTH -->
+  <div id="graph-container">
+    <div class="chart-container">
+      <canvas id="decayChart"></canvas>
+    </div>
+  </div>
+
+</div>
+  </div>  </div>
+
+  <!-- Formules -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+    <div class="formula-box">
+      <span class="label">Loi de désintégration</span>
+      N = N<sub>0</sub> · e<sup>-λt</sup>
+    </div>
+    <div class="formula-box">
+      <span class="label">Demi-vie</span>
+      t<sub>1/2</sub> = ln(2) / λ
+    </div>
+    <div class="formula-box">
+      <span class="label">Constante radioactive</span>
+      λ = ln(2) / t<sub>1/2</sub>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div id="questions-card" class="card" style="margin-top: 2rem;">
+    <div class="card-title"><i class="ti ti-help-circle"></i> Questions — Radioactivité</div>
+    <div style="font-size:0.85rem; color:var(--ps-gris); margin:0.4rem 0 1rem 0.5rem;">
+      Clique sur une question pour débloquer la suivante.
+    </div>
+    <div id="panel-questions-seconde" class="level-panel-questions active">
+      <div id="qs-seconde"></div>
+    </div>
+  </div>
+
+  <!-- Correction finale -->
+  <div id="final-correction-card" class="card" style="margin-top:2rem; display:none;">
+    <div class="card-title">
+      <i class="ti ti-lock-open"></i> Correction complète
+    </div>
+    <div class="callout callout-b">
+      Toutes les questions ont été faites.
+    </div>
+    <button class="btn-launch" onclick="askCorrectionCode()">
+      Afficher la correction complète
+    </button>
+    <div id="full-correction" style="margin-top:1.5rem; display:none;"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="main-wrap" style="padding-top:0; padding-bottom:1rem;">
+  <div class="page-footer">
+    Gontier Adrien ·
+    <a href="https://bio.link/puisciences">PuiSciences</a> ·
+    <a href="https://play.google.com/store/apps/details?id=com.adriengontier.puisciences_college_light">Application Android</a> ·
+    <a href="https://www.instagram.com/puisciencest">Instagram</a> ·
+    <a href="https://www.tiktok.com/@puisciences">TikTok</a> ·
+    <a href="https://www.youtube.com/channel/UClWym-97b-IIA4_wuWJIzPA">Youtube</a>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+  // === Données de la simulation ===
+const totalGrains = 30; 
+const SIMULATION_DURATION = 180; 
+const REAL_DURATION = 10; 
+const ACCELERATION_FACTOR = SIMULATION_DURATION / REAL_DURATION; // 18x
+const HALF_LIFE = 45;
+const LAMBDA = Math.log(2)/ HALF_LIFE;  
+let currentTime = 0;
+  let animationInterval;
+  let chart;
+  let data = {
+    times: [],
+    parents: [],
+    children: []
+  };
+
+  // Temps de mesure (en secondes)
+  const measurementTimes = [15, 30, 45, 60];
+
+  // === Initialisation ===
+  function initChart() {
+    const ctx = document.getElementById('decayChart').getContext('2d');
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.times,
+        datasets: [
+          {
+            label: 'Noyaux pères (maïs)',
+            data: data.parents,
+            borderColor: '#a03460',
+            backgroundColor: 'rgba(160, 52, 96, 0.1)',
+            fill: false,
+            tension: 0.4,
+            pointRadius: 3,
+            pointBackgroundColor: '#a03460'
+          },
+          {
+            label: 'Noyaux fils (pop-corn)',
+            data: data.children,
+            borderColor: '#2a7fa8',
+            backgroundColor: 'rgba(42, 127, 168, 0.1)',
+            fill: false,
+            tension: 0.4,
+            pointRadius: 3,
+            pointBackgroundColor: '#2a7fa8'
+          }
+        ]
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: { size: 12 },
+              boxWidth: 14
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Nombre de noyaux',
+              font: { size: 12 }
+            },
+            grid: { color: 'rgba(0,0,0,0.04)' }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Temps (s)',
+              font: { size: 12 }
+            },
+            ticks: { font: { size: 10 } }
+          }
+        }
+      }
+    });
+  }
+
+  function createGrains() {
+    const container = document.getElementById('grainsContainer');
+    container.innerHTML = '';
+
+    // Créer les grains de maïs initiaux
+    for (let i = 0; i < totalGrains; i++) {
+      const grain = document.createElement('div');
+      grain.className = 'grain';
+      grain.id = `grain-${i}`;
+      grain.style.left = `${Math.random() * 80 + 10}%`;
+      grain.style.top = `${Math.random() * 80 + 10}%`;
+      container.appendChild(grain);
+    }
+  }
+
+  function startSimulation() {
+
+  clearInterval(animationInterval);
+
+  // Boutons
+  document.getElementById('startBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'inline-flex';
+
+  // Reset
+  currentTime = 0;
+  data = { times: [], parents: [], children: [] };
+
+  initChart();
+  createGrains();
+
+  // Nombre déjà transformé
+  let previousChildren = 0;
+
+  // Mise à jour toutes les 100 ms
+  animationInterval = setInterval(() => {
+
+    // Temps réel accéléré
+    currentTime += 0.1;
+
+    const simulatedTime = currentTime * ACCELERATION_FACTOR;
+
+    // TIMER ACCÉLÉRÉ
+    document.getElementById('timer').textContent =
+      `Temps: ${Math.round(simulatedTime)} s`;
+
+    // Calcul radioactivité
+    const remaining = totalGrains * Math.exp(-LAMBDA * simulatedTime);
+
+    const parents = Math.round(remaining);
+    const children = totalGrains - parents;
+
+    // === COURBE QUI SE TRACE PETIT À PETIT ===
+    data.times.push(Math.round(simulatedTime));
+    data.parents.push(parents);
+    data.children.push(children);
+
+    chart.update('none');
+
+    // === POP-CORN PROGRESSIFS ===
+    if (children > previousChildren) {
+
+      const newPopcorns = children - previousChildren;
+
+      transformSomeGrains(newPopcorns);
+
+      previousChildren = children;
+    }
+
+    // Fin simulation
+    if (simulatedTime >= SIMULATION_DURATION) {
+
+      clearInterval(animationInterval);
+
+      // Transformer tout le reste
+      transformSomeGrains(999);
+
+      document.getElementById('timer').textContent =
+        `Temps: ${SIMULATION_DURATION} s`;
+    }
+
+  }, 100); // toutes les 100 ms
+}
+
+function transformSomeGrains(numberToTransform) {
+
+  const container = document.getElementById('grainsContainer');
+
+  const grains = container.querySelectorAll('.grain');
+
+  for (let i = 0; i < numberToTransform && i < grains.length; i++) {
+
+    const grain = grains[i];
+
+    const popcorn = document.createElement('div');
+
+    popcorn.className = 'popcorn';
+
+    popcorn.style.left = grain.style.left;
+    popcorn.style.top = grain.style.top;
+
+    // Apparition progressive
+popcorn.style.transform = `scale(0) rotate(${Math.random()*360}deg)`;
+  popcorn.style.opacity = '0';
+
+    container.appendChild(popcorn);
+
+    requestAnimationFrame(() => {
+
+      popcorn.style.transition =
+        'transform 0.4s ease, opacity 0.4s ease';
+
+      popcorn.style.transform =
+popcorn.style.transform =
+  `scale(${0.9 + Math.random()*0.4})
+   rotate(${Math.random()*360}deg)`;
+   popcorn.style.top = grain.style.top;
+   const offsetX = (Math.random() - 0.5) * 18;
+const offsetY = (Math.random() - 0.5) * 18;
+
+popcorn.style.left =
+  `calc(${grain.style.left} + ${offsetX}px)`;
+
+popcorn.style.top =
+  `calc(${grain.style.top} + ${offsetY}px)`;
+      popcorn.style.opacity = '1';
+    });
+
+    grain.remove();
+  }
+}
+
+  function transformGrainsToPopcorn(remainingParents) {
+    const container = document.getElementById('grainsContainer');
+    const grains = container.querySelectorAll('.grain');
+    const popcorns = container.querySelectorAll('.popcorn');
+
+    // Calculer combien de grains transformer
+    const toTransform = totalGrains - remainingParents - popcorns.length;
+
+    // Transformer les grains en pop-corn
+    for (let i = 0; i < toTransform && i < grains.length; i++) {
+      const grain = grains[i];
+      const popcorn = document.createElement('div');
+      popcorn.className = 'popcorn';
+      popcorn.style.left = grain.style.left;
+      popcorn.style.top = grain.style.top;
+      container.appendChild(popcorn);
+
+      // Animation d'apparition
+      setTimeout(() => {
+        popcorn.style.opacity = '1';
+        grain.remove();
+      }, 100);
+    }
+  }
+
+  function resetSimulation() {
+    clearInterval(animationInterval);
+    document.getElementById('startBtn').style.display = 'inline-flex';
+    document.getElementById('resetBtn').style.display = 'none';
+    document.getElementById('timer').textContent = 'Temps: 0 s';
+
+    // Réinitialiser le graphique
+    data = { times: [], parents: [], children: [] };
+    initChart();
+	
+
+    // Réinitialiser les grains
+    createGrains();
+  }
+
+  // === Questions ===
+  const questionsRadioactivite = {
+    seconde: [
+      {
+        num: 1,
+        cls: 'qn-s',
+        text: 'Qu’est-ce que la radioactivité ?',
+        hint: 'Pense à une transformation spontanée de noyaux atomiques.',
+        answer: 'La radioactivité est un phénomène naturel où des noyaux atomiques instables (appelés noyaux radioactifs) se transforment spontanément en d’autres noyaux, en émettant des particules (α, β) et/ou des rayonnements (γ).',
+        formula: null
+      },
+      {
+        num: 2,
+        cls: 'qn-s',
+        text: 'Dans l’analogie du micro-ondes, que représentent les grains de maïs et les pop-corn ?',
+        hint: 'Les grains disparaissent et les pop-corn apparaissent.',
+        answer: 'Les grains de maïs représentent les **noyaux pères radioactifs** (qui se désintègrent), et les pop-corn représentent les **noyaux fils stables** (résultats de la désintégration).',
+        formula: null
+      },
+      {
+        num: 3,
+        cls: 'qn-s',
+        text: 'Qu’est-ce qu’une désintégration radioactive ?',
+        hint: 'C’est une transformation d’un noyau instable.',
+        answer: 'Une désintégration radioactive est la transformation spontanée d’un noyau atomique instable (noyau père) en un autre noyau (noyau fils), avec émission de rayonnements (particules α ou β, et/ou rayonnement γ).',
+        formula: null
+      },
+      {
+        num: 4,
+        cls: 'qn-s',
+        text: 'Quelle est la loi de désintégration radioactive ?',
+        hint: 'Elle relie N, N₀, λ et t.',
+        answer: 'La loi de désintégration radioactive est **N = N₀ · e^(-λt)**, où N est le nombre de noyaux radioactifs restants, N₀ le nombre initial, λ la constante radioactive et t le temps écoulé.',
+        formula: 'N = N₀ · e<sup>-λt</sup>'
+      },
+      {
+        num: 5,
+        cls: 'qn-s',
+        text: 'Qu’est-ce que la demi-vie (t₁/₂) d’un élément radioactif ?',
+        hint: 'C’est le temps nécessaire pour que la moitié des noyaux se désintègrent.',
+        answer: 'La demi-vie t₁/₂ est le temps nécessaire pour que **la moitié des noyaux radioactifs présents initialement** se désintègrent. Elle est caractéristique de chaque isotope radioactif.',
+        formula: 't<sub>1/2</sub> = ln(2) / λ'
+      },
+      {
+        num: 6,
+        cls: 'qn-s',
+        text: 'Comment évolue le nombre de noyaux radioactifs au cours du temps ?',
+        hint: 'Observe la courbe rouge dans la simulation.',
+        answer: 'Le nombre de noyaux radioactifs **décroît exponentiellement** au cours du temps. La courbe est une exponentielle décroissante, caractéristique des phénomènes radioactifs.',
+        formula: null
+      },
+      {
+        num: 7,
+        cls: 'qn-s',
+        text: 'Que devient l’activité d’un échantillon radioactif au bout de 2 demi-vies ?',
+        hint: 'Calcule le pourcentage de noyaux restants après 2 × t₁/₂.',
+        answer: 'Au bout de 2 demi-vies, **25% des noyaux initiaux** restent radioactifs (la moitié de la moitié). L’activité (nombre de désintégrations par seconde) est donc divisée par 4.',
+        formula: null
+      },
+      {
+        num: 8,
+        cls: 'qn-s',
+        text: 'Dans la simulation, pourquoi le nombre de pop-corn augmente-t-il alors que le nombre de grains de maïs diminue ?',
+        hint: 'C’est le principe de la conservation de la matière.',
+        answer: 'C’est une **conservation du nombre total de noyaux** : chaque grain de maïs (noyau père) qui disparaît donne un pop-corn (noyau fils). Le nombre total reste constant, mais la proportion de pères diminue tandis que celle des fils augmente.',
+        formula: 'N_pères + N_fils = N_total = constante'
+      },
+      {
+        num: 9,
+        cls: 'qn-s',
+        text: 'Quelle est la relation entre la constante radioactive λ et la demi-vie t₁/₂ ?',
+        hint: 'Cherche une formule avec ln(2).',
+        answer: 'La constante radioactive λ est liée à la demi-vie par la relation **λ = ln(2) / t₁/₂**. Plus la demi-vie est courte, plus λ est grande (désintégration rapide).',
+        formula: 'λ = ln(2) / t<sub>1/2</sub>'
+      }
+    ]
+  };
+
+  // Fonctions pour les questions
+  function buildQuestionsRadioactivite(level) {
+    const cont = document.getElementById('qs-' + level);
+    if (!cont || !questionsRadioactivite[level]) return;
+    cont.innerHTML = '';
+    questionsRadioactivite[level].forEach((q, index) => {
+      const block = document.createElement('div');
+      block.className = 'question-block';
+      if (index > 0) block.style.display = 'none';
+      block.innerHTML = `
+        <div class="q-head" onclick="toggleQuestion(this, ${index}, '${level}')">
+          <div class="q-num ${q.cls}">${q.num}</div>
+          <div class="q-text">${q.text}</div>
+          <span class="q-arrow">›</span>
+        </div>
+        <div class="q-answer">
+          <strong style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em; color:#999; display:block; margin-bottom:0.4rem;">
+            Aide
+          </strong>
+          ${q.hint ? q.hint : 'Pas d\'aide pour cette question. Passe à la suivante !'}
+        </div>`;
+      cont.appendChild(block);
+    });
+  }
+
+  function toggleQuestion(head, index, level) {
+    head.classList.toggle('open');
+    head.nextElementSibling.classList.toggle('visible');
+    const allQuestions = document.querySelectorAll('#qs-' + level + ' .question-block');
+    const next = allQuestions[index + 1];
+    if (next && next.style.display === 'none') {
+      next.style.display = 'block';
+      next.animate([{ opacity:0, transform:'translateY(10px)' }, { opacity:1, transform:'translateY(0px)' }], {
+        duration:400,
+        easing:'ease-out'
+      });
+    }
+    if (index === allQuestions.length - 1) {
+      document.getElementById('final-correction-card').style.display = 'block';
+    }
+  }
+
+  function askCorrectionCode() {
+    const code = prompt("Entrez le code de correction :");
+    if (code === "puisciences") showFullCorrection();
+    else alert("Code incorrect");
+  }
+
+  function showFullCorrection() {
+    const container = document.getElementById('full-correction');
+    container.style.display = 'block';
+    const qs = questionsRadioactivite[selectedLevel];
+    let html = '';
+    qs.forEach(q => {
+      html += `
+        <div class="question-block" style="margin-bottom:1rem;">
+          <div class="q-head open">
+            <div class="q-num ${q.cls}">${q.num}</div>
+            <div class="q-text">${q.text}</div>
+          </div>
+          <div class="q-answer visible">
+            <strong style="display:block; margin-bottom:0.5rem; color:#666;">Correction complète</strong>
+            ${q.answer}
+            ${q.formula ? `<div class="answer-formula">${q.formula}</div>` : ''}
+          </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  // Initialisation
+  let selectedLevel = 'seconde';
+  window.addEventListener('DOMContentLoaded', () => {
+    createGrains();
+    initChart();
+    buildQuestionsRadioactivite('seconde');
+  });
+</script>
+</body>
+</html>
